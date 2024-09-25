@@ -3,9 +3,19 @@
 @tailwind utilities;
 
 .mandatory-scroll-snapping {
-  scroll-snap-type: y mandatory; /* Enable vertical scroll snapping */
-  overflow-y: auto; /* Ensure scrolling works */
-  height: 100vh; /* Full viewport height for snapping */
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll; /* Allow scrolling but hide scrollbar */
+  height: 100vh;
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+.mandatory-scroll-snapping::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.mandatory-scroll-snapping {
+  scrollbar-width: none; /* For Firefox */
 }
 
 section {

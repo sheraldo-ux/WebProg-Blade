@@ -1,8 +1,14 @@
 <!-- leaflet-map.blade.php -->
-<div id="map" style="height: 500px; width: 100%;"></div>
+<div id="map" style="height: 500px; width: 100%; position: relative; z-index: 1;"></div>
 
 @push('styles')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        .mobile-menu {
+            position: relative; 
+            z-index: 10;
+        }
+    </style>
 @endpush
 
 @push('scripts')

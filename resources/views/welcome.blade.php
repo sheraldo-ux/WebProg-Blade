@@ -14,7 +14,7 @@
 </head>
 <body class="h-full overflow-hidden">
 <div class="min-h-full" x-data="{ isOpen: false }">
-  <header class="bg-black pb-24">
+  <header class="bg-black pb-24 max-sm:pt-4">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="relative flex items-center justify-between py-5">
         <!-- Logo -->
@@ -62,7 +62,7 @@
       >
         <div class="fixed inset-0 z-20 bg-black bg-opacity-25" aria-hidden="true"></div>
 
-        <div class="absolute inset-x-0 top-0 z-30 mx-auto w-full max-w-3xl origin-top transform p-2 transition">
+        <div class="absolute inset-x-0 top-0 z-30 mx-auto w-full max-w-3xl origin-top transform p-2 transition max-sm:pt-6">
           <div class="divide-y divide-gray-200 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
             <div class="pb-2 pt-3">
               <div class="flex items-center justify-between px-4">
@@ -93,7 +93,7 @@
     </div>
   </header>
 
-  <main class="-mt-24 pb-8">
+  <main class="-mt-24 pb-8 max-sm:pt-4">
     <div class="mandatory-scroll-snapping"> <!-- Scroll Animation -->
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 class="sr-only">Home Page</h1>

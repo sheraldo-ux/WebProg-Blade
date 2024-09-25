@@ -9,11 +9,12 @@
   @vite('resources/css/app.css')
   @vite('resources/js/app.js')
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <title>Document</title>
 </head>
-<body class="h-full">
+<body class="h-full overflow-hidden">
 <div class="min-h-full" x-data="{ isOpen: false }">
-  <header class="bg-indigo-600 pb-24">
+  <header class="bg-black pb-24">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="relative flex items-center justify-between py-5">
         <!-- Logo -->
@@ -26,7 +27,7 @@
 
         <!-- Right section on desktop -->
         <div class="hidden lg:ml-4 lg:flex lg:items-center lg:pr-0.5 w-full">
-          <nav class="flex justify-center space-x-4 w-full">
+          <nav class="flex justify-start space-x-4 w-full">
             <a href="#map" class="rounded-md bg-white bg-opacity-0 px-3 py-2 text-sm font-medium text-white hover:bg-opacity-10" aria-current="page">Map</a>
             <a href="#information" class="rounded-md bg-white bg-opacity-0 px-3 py-2 text-sm font-medium text-indigo-100 hover:bg-opacity-10">Information</a>
             <a href="#tips" class="rounded-md bg-white bg-opacity-0 px-3 py-2 text-sm font-medium text-indigo-100 hover:bg-opacity-10">Tips</a>
@@ -93,131 +94,132 @@
   </header>
 
   <main class="-mt-24 pb-8">
-    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-      <h1 class="sr-only">Page title</h1>
-      <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
-        <!-- Left column -->
-        <div class="grid grid-cols-1 gap-4 lg:col-span-2">
-          <section aria-labelledby="map-title">
-            <h2 class="sr-only" id="map-title">Map Section</h2>
-            <div class="overflow-hidden rounded-lg bg-white shadow">
-              <div class="p-6">
-                <x-map-component />
+    <div class="mandatory-scroll-snapping overflow-hidden"> <!-- Scroll Animation -->
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h1 class="sr-only">Home Page</h1>
+        <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
+          <!-- Left column -->
+          <div class="grid grid-cols-1 gap-4 lg:col-span-2">
+            <section aria-labelledby="map-title">
+              <h2 class="sr-only" id="map-title">Map Section</h2>
+              <div class="overflow-hidden rounded-lg bg-white shadow">
+                <div class="p-6">
+                  <x-map-component />
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
+
+          <!-- Right column -->
+          <div class="grid grid-cols-1 gap-4">
+            <section aria-labelledby="section-2-title">
+              <h2 class="sr-only" id="section-2-title">Section title</h2>
+              <div class="overflow-hidden rounded-lg bg-white shadow">
+                <div class="p-6">
+                  <div class="grid grid-cols-1 gap-4">
+                    <!-- First Box (Jakarta Barat) -->
+                    <div aria-labelledby="jakarta-barat-title">
+                      <h2 class="sr-only" id="jakarta-barat-title">Jakarta Barat</h2>
+                      <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Barat')">
+                          <div class="p-6">
+                              <h3 class="text-lg font-bold" style="color: white">Jakarta Barat</h3>
+                              <p style="color: white">Click to see details for Jakarta Barat</p>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- Second Box (Jakarta Timur) -->
+                    <div aria-labelledby="jakarta-timur-title">
+                      <h2 class="sr-only" id="jakarta-timur-title">Jakarta Barat</h2>
+                      <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Timur')">
+                          <div class="p-6">
+                              <h3 class="text-lg font-bold" style="color: white">Jakarta Timur</h3>
+                              <p style="color: white">Click to see details for Jakarta Timur</p>
+                          </div>
+                      </div>
+                    </div>
+                
+                    <!-- Third Box (Jakarta Selatan) -->
+                    <div aria-labelledby="jakarta-selatan-title">
+                      <h2 class="sr-only" id="jakarta-selatan-title">Jakarta Barat</h2>
+                      <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Selatan')">
+                          <div class="p-6">
+                              <h3 class="text-lg font-bold" style="color: white">Jakarta Selatan</h3>
+                              <p style="color: white">Click to see details for Jakarta Selatan</p>
+                          </div>
+                      </div>
+                    </div>
+                
+                    <!-- Fourth Box (Jakarta Utara) -->
+                    <div aria-labelledby="jakarta-utara-title">
+                      <h2 class="sr-only" id="jakarta-utara-title">Jakarta Barat</h2>
+                      <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Utara')">
+                          <div class="p-6">
+                              <h3 class="text-lg font-bold" style="color: white">Jakarta Utara</h3>
+                              <p style="color: white">Click to see details for Jakarta Utara</p>
+                          </div>
+                      </div>
+                    </div>
+                </div>              
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
 
-        <!-- Right column -->
-        <div class="grid grid-cols-1 gap-4">
-          <section aria-labelledby="section-2-title">
-            <h2 class="sr-only" id="section-2-title">Section title</h2>
-            <div class="overflow-hidden rounded-lg bg-white shadow">
-              <div class="p-6">
-                <div class="grid grid-cols-1 gap-4">
-                   <!-- First Box (Jakarta Barat) -->
-                   <section aria-labelledby="jakarta-barat-title">
-                    <h2 class="sr-only" id="jakarta-barat-title">Jakarta Barat</h2>
-                    <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Barat')">
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold" style="color: white">Jakarta Barat</h3>
-                            <p style="color: white">Click to see details for Jakarta Barat</p>
-                        </div>
-                    </div>
-                   </section>
-
-                   <!-- Second Box (Jakarta Timur) -->
-                   <section aria-labelledby="jakarta-timur-title">
-                    <h2 class="sr-only" id="jakarta-timur-title">Jakarta Barat</h2>
-                    <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Timur')">
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold" style="color: white">Jakarta Timur</h3>
-                            <p style="color: white">Click to see details for Jakarta Timur</p>
-                        </div>
-                    </div>
-                   </section>
-              
-                  <!-- Third Box (Jakarta Selatan) -->
-                  <section aria-labelledby="jakarta-selatan-title">
-                    <h2 class="sr-only" id="jakarta-selatan-title">Jakarta Barat</h2>
-                    <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Selatan')">
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold" style="color: white">Jakarta Selatan</h3>
-                            <p style="color: white">Click to see details for Jakarta Selatan</p>
-                        </div>
-                    </div>
-                   </section>
-              
-                  <!-- Fourth Box (Jakarta Utara) -->
-                  <section aria-labelledby="jakarta-utara-title">
-                    <h2 class="sr-only" id="jakarta-utara-title">Jakarta Barat</h2>
-                    <div class="cursor-pointer overflow-hidden rounded-lg bg-indigo-500 shadow" onclick="showDetails('Jakarta Utara')">
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold" style="color: white">Jakarta Utara</h3>
-                            <p style="color: white">Click to see details for Jakarta Utara</p>
-                        </div>
-                    </div>
-                   </section>
-              </div>              
-              </div>
+        <!-- Information Section -->
+        <section id="information" aria-labelledby="information-title" class="mt-8">
+          <h2 class="sr-only" id="information-title">Information</h2>
+          <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
+            <div class="p-6">
+              <h3 class="text-lg font-medium">Information</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
+              </p>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
+
+        <!-- Tips Section -->
+        <section id="tips" aria-labelledby="information-title" class="mt-8">
+          <h2 class="sr-only" id="information-title">Tips</h2>
+          <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
+            <div class="p-6">
+              <h3 class="text-lg font-medium">Tips</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" aria-labelledby="information-title" class="mt-8">
+          <h2 class="sr-only" id="information-title">About</h2>
+          <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
+            <div class="p-6">
+              <h3 class="text-lg font-medium">About</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Support Section -->
+        <section id="support" aria-labelledby="information-title" class="mt-8">
+          <h2 class="sr-only" id="information-title">Support</h2>
+          <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
+            <div class="p-6">
+              <h3 class="text-lg font-medium">Support</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </div>
-
-      <!-- Information Section -->
-      <section id="information" aria-labelledby="information-title" class="mt-8">
-        <h2 class="sr-only" id="information-title">Information</h2>
-        <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
-          <div class="p-6">
-            <h3 class="text-lg font-medium">Information</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Tips Section -->
-      <section id="tips" aria-labelledby="information-title" class="mt-8">
-        <h2 class="sr-only" id="information-title">Tips</h2>
-        <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
-          <div class="p-6">
-            <h3 class="text-lg font-medium">Tips</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- About Section -->
-      <section id="about" aria-labelledby="information-title" class="mt-8">
-        <h2 class="sr-only" id="information-title">About</h2>
-        <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
-          <div class="p-6">
-            <h3 class="text-lg font-medium">About</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Support Section -->
-      <section id="support" aria-labelledby="information-title" class="mt-8">
-        <h2 class="sr-only" id="information-title">Support</h2>
-        <div class="overflow-hidden rounded-lg bg-white shadow mb-8">
-          <div class="p-6">
-            <h3 class="text-lg font-medium">Support</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus, ac volutpat libero posuere. Nunc sit amet varius quam, id facilisis lectus. Donec et purus luctus, lacinia lectus a, aliquam lectus. In viverra sit amet turpis eu eleifend. Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis erat sed mauris. Integer nec turpis at lectus aliquet ultrices. In sit amet posuere sem. Aenean quis odio et dolor accumsan imperdiet.
-            </p>
-          </div>
-        </div>
-      </section>
-
-
     </div>
   </main>
 </div>

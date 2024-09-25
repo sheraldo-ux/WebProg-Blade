@@ -14,7 +14,7 @@
 </head>
 <body class="h-full overflow-hidden">
 <div class="min-h-full" x-data="{ isOpen: false }">
-  <header class="bg-black pb-24 max-sm:pt-4">
+  <header class="bg-black pb-24 max-lg:pt-4">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="relative flex items-center justify-between py-5">
         <!-- Logo -->
@@ -93,7 +93,7 @@
     </div>
   </header>
 
-  <main class="-mt-24 pb-8 max-sm:pt-4">
+  <main class="-mt-24 pb-8 max-lg:pt-4">
     <div class="mandatory-scroll-snapping"> <!-- Scroll Animation -->
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 class="sr-only">Home Page</h1>

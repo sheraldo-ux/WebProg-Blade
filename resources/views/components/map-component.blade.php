@@ -1,4 +1,3 @@
-<!-- leaflet-map.blade.php -->
 <div id="map" style="height: 500px; width: 100%; position: relative; z-index: 1;"></div>
 
 @push('styles')
@@ -30,7 +29,7 @@
                     { latlng: [-6.16888, 106.71605], kelurahan: "Duri Kosambi", indeksBanjir: 1.8, Kategori: "Sedang" },
                     { latlng: [-6.13983, 106.75331], kelurahan: "Kapuk", indeksBanjir: 1.6, Kategori: "Sedang" },
                     { latlng: [-6.1511336, 106.7575653], kelurahan: "Kedaung Kali Angke", indeksBanjir: 1.6, Kategori: "Sedang" },
-                    { latlng: [-6.16122, 106.73901], kelurahan: "Rawa Buaya" , indeksBanjir: 2.2, Kategori: "Tinggi" },
+                    { latlng: [-6.16122, 106.73901], kelurahan: "Rawa Buaya", indeksBanjir: 2.2, Kategori: "Tinggi" },
                     { latlng: [-6.1489448, 106.7823051], kelurahan: "Jelambar Baru", indeksBanjir: 1.6, Kategori: "Sedang" },
                     { latlng: [-6.17116, 106.78476], kelurahan: "Tanjung Duren Utara", indeksBanjir: 1.6, Kategori: "Sedang" },
                     { latlng: [-6.16684, 106.70250], kelurahan: "Semanan", indeksBanjir: 1.6, Kategori: "Sedang" },
@@ -86,15 +85,21 @@
                     fillOpacity: 0.8,
                 }).addTo(map);
 
-                marker.on("click", () => toggleCityDetails(location.city));
+                marker.on("click", () => {
+                    console.log(`Marker clicked: ${location.city}`);
+                    toggleCityDetails(location.city);
+                });
 
                 marker.bindPopup(`Kota: ${location.city}<br>Total Lokasi Banjir: ${location.count}`);
             });
 
             // Function to show details for a specific city
-            function showDetails(city) {
+            window.showDetails = function(city) {
+                console.log(`Showing details for: ${city}`);
                 const cityCenter = floodLocations.find((loc) => loc.city === city)?.latlng;
-                map.setView(cityCenter, 11);
+                if (cityCenter) {
+                    map.setView(cityCenter, 11);
+                }
 
                 const markers = cityDetails[city].map((location) => {
                     const detailMarker = L.circleMarker(location.latlng, {
@@ -104,33 +109,32 @@
                         weight: 1,
                         opacity: 1,
                         fillOpacity: 0.8,
-                    }).addTo(map)
-                        .bindPopup(`Kelurahan: ${location.kelurahan}<br>Indeks Banjir: ${location.indeksBanjir}<br>Kategori: ${location.Kategori}`);
-                    
+                    }).addTo(map);
+
+                    detailMarker.bindPopup(`Kelurahan: ${location.kelurahan}<br>Indeks Banjir: ${location.indeksBanjir}<br>Kategori: ${location.Kategori}`);
                     return detailMarker;
                 });
 
+                // Clear previous markers
+                detailMarkers.forEach((m) => map.removeLayer(m));
+                detailMarkers.length = 0;
+
+                // Store new markers
                 detailMarkers.push(...markers);
-            }
+                currentCity = city;
+            };
 
-            // Function to hide the current city details
-            function hideDetails() {
-                detailMarkers.forEach((marker) => map.removeLayer(marker));
-                detailMarkers.length = 0; // Clear the markers array
-            }
-
-            // Function to toggle the city details
+            // Function to toggle city details
             function toggleCityDetails(city) {
                 if (currentCity === city) {
-                    hideDetails();
-                    map.setView([-6.2088, 106.8456], 11);
+                    // Hide details if the same city is clicked
+                    detailMarkers.forEach((m) => map.removeLayer(m));
+                    detailMarkers.length = 0;
                     currentCity = null;
                 } else {
-                    hideDetails();
                     showDetails(city);
-                    currentCity = city;
                 }
             }
         });
     </script>
-@endpush    
+@endpush

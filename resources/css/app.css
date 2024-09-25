@@ -2,3 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.mandatory-scroll-snapping {
+  scroll-snap-type: y mandatory; /* Enable vertical scroll snapping */
+  overflow-y: auto; /* Ensure scrolling works */
+  height: 100vh; /* Full viewport height for snapping */
+}
+
+section {
+  scroll-snap-align: start; /* Align the start of each section for snapping */
+  height: 100vh; /* Each section takes full viewport height */
+}

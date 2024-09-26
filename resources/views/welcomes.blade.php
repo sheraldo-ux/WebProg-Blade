@@ -12,10 +12,10 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <title>Document</title>
 </head>
-<body>
+ <body style = "background: #f1f1ef">
   <div class="min-h-full" x-data="{ isOpen: false }">
     <div>
-    <header class="bg-black pb-24 max-lg:pt-4">
+    <header class="bg-slate-800 pb-24 max-lg:pt-4">
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div class="relative flex items-center justify-between py-5">
           <!-- Logo -->
@@ -224,5 +224,5 @@
       </div>
     </div>
   </main>
-  </body>
+</body>
 </html>

@@ -1,4 +1,4 @@
-<div id="map" style="height: 500px; width: 100%; position: relative;"></div>
+<div id="map" style="height: 500px; width: 100%; position: relative; z-index: 1 ;"></div>
 
 @push('styles')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />

@@ -15,10 +15,18 @@
 
 /* Hide scrollbar for Firefox */
 .mandatory-scroll-snapping {
-  scrollbar-width: none; /* For Firefox */
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+  scroll-padding-top: 2rem; /* Adjust to the height of your navbar */
 }
 
 section {
-  scroll-snap-align: start; /* Align the start of each section for snapping */
-  height: 100vh; /* Each section takes full viewport height */
+  scroll-snap-align: start;
+  height: 100vh; 
 }
+
+html {
+  scroll-padding-top: 40rem; /* Adjust this to match your header's height */
+}
+

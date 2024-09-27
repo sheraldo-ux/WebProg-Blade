@@ -13,6 +13,7 @@
         @yield('content') <!-- This is where the content from other views will be injected -->
     </div>
 
-    @stack('scripts') <!-- This will include the scripts pushed from components -->
+    @stack('scripts')
+    
 </body>
 </html>

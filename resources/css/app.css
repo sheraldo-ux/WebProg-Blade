@@ -25,3 +25,8 @@ section {
   scroll-snap-align: start;
   height: 100vh; 
 }
+
+html {
+  scroll-padding-top: 40rem; /* Adjust this to match your header's height */
+}
+

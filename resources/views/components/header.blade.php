@@ -1,4 +1,7 @@
-<header x-data="{ isOpen: false, activeItem: 'map' }" class="bg-slate-900 pb-4 pt-2 sticky top-0 z-10">
+<header x-data="{ 
+  isOpen: false, 
+  activeItem: window.location.pathname === '/' ? 'map' : window.location.pathname.replace('/', '') 
+}" class="bg-slate-900 pb-4 pt-2 sticky top-0 z-10">
   <div class="mx-auto max-w-23l px-4 sm:px-6 lg:max-w-7xl lg:px-8"> 
     <div class="relative flex items-center justify-between py-3"> 
 
@@ -23,19 +26,19 @@
       >
         <!-- Navigation -->
         <nav class="flex justify-start space-x-4 w-full mt-1.5">
-          <a href="#map" @click="activeItem = 'map'" 
+          <a href="/" @click="activeItem = 'map'; isOpen = false" 
              :class="{'text-indigo-400': activeItem === 'map', 'text-indigo-100': activeItem !== 'map'}" 
              class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Map</a>
-          <a href="#information" @click="activeItem = 'information'" 
+          <a href="information" @click="activeItem = 'information'; isOpen = false" 
              :class="{'text-indigo-400': activeItem === 'information', 'text-indigo-100': activeItem !== 'information'}" 
              class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Information</a>
-          <a href="#tips" @click="activeItem = 'tips'" 
+          <a href="tips" @click="activeItem = 'tips'; isOpen = false" 
              :class="{'text-indigo-400': activeItem === 'tips', 'text-indigo-100': activeItem !== 'tips'}" 
              class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Tips</a>
-          <a href="#about" @click="activeItem = 'about'" 
+          <a href="about" @click="activeItem = 'about'; isOpen = false" 
              :class="{'text-indigo-400': activeItem === 'about', 'text-indigo-100': activeItem !== 'about'}" 
              class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">About</a>
-          <a href="#support" @click="activeItem = 'support'" 
+          <a href="support" @click="activeItem = 'support'; isOpen = false" 
              :class="{'text-indigo-400': activeItem === 'support', 'text-indigo-100': activeItem !== 'support'}" 
              class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Support</a>
         </nav>
@@ -93,30 +96,41 @@
       <div class="absolute inset-x-0 top-0 z-20 mx-auto w-full max-w-2xl origin-top transform transition ease-linear">
         <div class="divide-y divide-gray-200 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
           <div class="pb-2 pt-3">
-            <div class="flex items-center justify-between px-4 mb-4">
+            <div class="flex items-center justify-between px-4">
               <div>
-                <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+                <h2 class="text-lg font-medium text-gray-900">Menu</h2>
+              </div>
+              <div>
+                <button 
+                  type="button" 
+                  @click="isOpen = !isOpen" 
+                  class="relative inline-flex items-center justify-center rounded-md bg-transparent p-2 text-indigo-400 hover:bg-indigo-200 hover:bg-opacity-10 focus:outline-none"
+                >
+                  <span class="sr-only">Close menu</span>
+                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
             </div>
-            <!-- Mobile menu items -->
-            <div class="mt-3 space-y-1 px-2">
-              <a href="#map" @click="activeItem = 'map'; isOpen = false" 
-                 :class="{'text-indigo-600 ': activeItem === 'map', 'text-gray-600': activeItem !== 'map'}" 
-                 class="block px-3 py-2 text-base font-medium transition-all duration-200 hover:bg-gray-100 hover:bg-opacity-70 rounded-md">Map</a>
-              <a href="#information" @click="activeItem = 'information'; isOpen = false" 
-                 :class="{'text-indigo-600 ': activeItem === 'information', 'text-gray-600': activeItem !== 'information'}" 
-                 class="block px-3 py-2 text-base font-medium transition-all duration-200 hover:bg-gray-100 hover:bg-opacity-70 rounded-md">Information</a>
-              <a href="#tips" @click="activeItem = 'tips'; isOpen = false" 
-                 :class="{'text-indigo-600 ': activeItem === 'tips', 'text-gray-600': activeItem !== 'tips'}" 
-                 class="block px-3 py-2 text-base font-medium transition-all duration-200 hover:bg-gray-100 hover:bg-opacity-70 rounded-md">Tips</a>
-              <a href="#about" @click="activeItem = 'about'; isOpen = false" 
-                 :class="{'text-indigo-600 ': activeItem === 'about', 'text-gray-600': activeItem !== 'about'}" 
-                 class="block px-3 py-2 text-base font-medium transition-all duration-200 hover:bg-gray-100 hover:bg-opacity-70 rounded-md">About</a>
-                 <a href="#support" @click="activeItem = 'support'; isOpen = false" 
-                 :class="{'text-indigo-600 ': activeItem === 'support', 'text-gray-600': activeItem !== 'support'}" 
-                 class="block px-3 py-2 text-base font-medium transition-all duration-200 hover:bg-gray-100 hover:bg-opacity-70 rounded-md">Support</a>
-            </div>
           </div>
+          <nav class="flex flex-col space-y-1 py-2">
+            <a href="/" @click="activeItem = 'map'; isOpen = false" 
+               :class="{'text-indigo-600': activeItem === 'map', 'text-slate-500': activeItem !== 'map'}" 
+               class="block px-4 py-2 text-sm font-medium">Map</a>
+            <a href="information" @click="activeItem = 'information'; isOpen = false" 
+               :class="{'text-indigo-600': activeItem === 'information', 'text-slate-500': activeItem !== 'information'}" 
+               class="block px-4 py-2 text-sm font-medium">Information</a>
+            <a href="tips" @click="activeItem = 'tips'; isOpen = false" 
+               :class="{'text-indigo-600': activeItem === 'tips', 'text-slate-500': activeItem !== 'tips'}" 
+               class="block px-4 py-2 text-sm font-medium">Tips</a>
+            <a href="about" @click="activeItem = 'about'; isOpen = false" 
+               :class="{'text-indigo-600': activeItem === 'about', 'text-slate-500': activeItem !== 'about'}" 
+               class="block px-4 py-2 text-sm font-medium">About</a>
+            <a href="support" @click="activeItem = 'support'; isOpen = false" 
+               :class="{'text-indigo-600': activeItem === 'support', 'text-slate-500': activeItem !== 'support'}" 
+               class="block px-4 py-2 text-sm font-medium">Support</a>
+          </nav>
         </div>
       </div>
     </div>

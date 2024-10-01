@@ -13,7 +13,7 @@
   </div>
 
   <!-- Right column -->
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 mt-24 lg:mt-0">
     <section aria-labelledby="section-2-title" class="flex-grow">
       <h2 class="sr-only" id="section-2-title">Section title</h2>
       <div class="overflow-hidden rounded-lg bg-white shadow">

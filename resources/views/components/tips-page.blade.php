@@ -12,19 +12,15 @@
         </div> --}}
   
         <!-- Buttons for SMART -->
-        <div class="flex space-x-4 mt-4">
+        <div class="flex flex-wrap gap-2 justify-center mt-4">
             <!-- Button for S -->
-            <button onclick="toggleTip('tip-s')" class="bg-indigo-500 text-white px-4 py-2 rounded-lg">S</button>
-            <!-- Button for M -->
-            <button onclick="toggleTip('tip-m')" class="bg-indigo-500 text-white px-4 py-2 rounded-lg">M</button>
-            <!-- Button for A -->
-            <button onclick="toggleTip('tip-a')" class="bg-indigo-500 text-white px-4 py-2 rounded-lg">A</button>
-            <!-- Button for R -->
-            <button onclick="toggleTip('tip-r')" class="bg-indigo-500 text-white px-4 py-2 rounded-lg">R</button>
-            <!-- Button for T -->
-            <button onclick="toggleTip('tip-t')" class="bg-indigo-500 text-white px-4 py-2 rounded-lg">T</button>
+            <button onclick="toggleTip('tip-s')" class="bg-indigo-500 text-white text-sm sm:text-base lg:text-lg px-2 sm:px-4 py-1 sm:py-2 rounded-lg">S</button>
+            <button onclick="toggleTip('tip-m')" class="bg-indigo-500 text-white text-sm sm:text-base lg:text-lg px-2 sm:px-4 py-1 sm:py-2 rounded-lg">M</button>
+            <button onclick="toggleTip('tip-a')" class="bg-indigo-500 text-white text-sm sm:text-base lg:text-lg px-2 sm:px-4 py-1 sm:py-2 rounded-lg">A</button>
+            <button onclick="toggleTip('tip-r')" class="bg-indigo-500 text-white text-sm sm:text-base lg:text-lg px-2 sm:px-4 py-1 sm:py-2 rounded-lg">R</button>
+            <button onclick="toggleTip('tip-t')" class="bg-indigo-500 text-white text-sm sm:text-base lg:text-lg px-2 sm:px-4 py-1 sm:py-2 rounded-lg">T</button>
             <!-- Button for Close (X) -->
-            <button onclick="collapseAll()" class="bg-red-500 text-black px-4 py-2 rounded-lg">X</button>
+            <button onclick="collapseAll()" class="bg-red-500 text-black text-sm sm:text-base lg:text-lg px-2 sm:px-4 py-1 sm:py-2 rounded-lg">X</button>
         </div>
         
   

@@ -9,7 +9,7 @@
       <div class="absolute left-0 flex-shrink-0 lg:static mt-1.5">
         <a href="#" @click="isOpen = !isOpen">
           <span class="sr-only">Your Company</span>
-          <img class="h-8 w-auto cursor-pointer" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=300" alt="Your Company">
+          <img class="h-12 w-auto cursor-pointer" src="logo.png" alt="Your Company">
         </a>
       </div>
       

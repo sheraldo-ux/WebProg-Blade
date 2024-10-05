@@ -1,0 +1,42 @@
+            const cityDetails = {
+                "Jakarta Barat": [
+                    { lnglat: [106.7235353, -6.140227], kelurahan: "Cengkareng Barat", indeksBanjir: 1.8, Kategori: "Sedang"},
+                    { lnglat: [106.7328601, -6.1416616], kelurahan: "Cengkareng Timur", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.71605, -6.16888], kelurahan: "Duri Kosambi", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.75331, -6.13983], kelurahan: "Kapuk", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.7575653, -6.1511336], kelurahan: "Kedaung Kali Angke", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.73901, -6.16122], kelurahan: "Rawa Buaya", indeksBanjir: 2.2, Kategori: "Tinggi" },
+                    { lnglat: [106.7823051, -6.1489448], kelurahan: "Jelambar Baru", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.78476, -6.17116], kelurahan: "Tanjung Duren Utara", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.70250, -6.16684], kelurahan: "Semanan", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.718693, -6.1198254], kelurahan: "Tegal Alur", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.75909, -6.18190], kelurahan: "Kedoya Selatan", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.76152, -6.16781], kelurahan: "Kedoya Utara", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.73918, -6.21895], kelurahan: "Joglo", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.73647, -6.18999], kelurahan: "Kembangan Selatan", indeksBanjir: 2.0, Kategori: "Tinggi"},
+                    { lnglat: [106.74394, -6.17179], kelurahan: "Kembangan Utara", indeksBanjir: 2.0, Kategori: "Tinggi" }
+                ],
+                "Jakarta Utara": [
+                    { lnglat: [106.92662, -6.12292], kelurahan: "Semper Barat", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.93517, -6.12093], kelurahan: "Semper Timur", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.92796, -6.15233], kelurahan: "Sukapura", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.9158465, -6.1626344], kelurahan: "Pegangsaan Dua", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.9116460, -6.1140999], kelurahan: "Lagoa", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.9121406, -6.1224924], kelurahan: "Tugu Utara", indeksBanjir: 1.6, Kategori: "Sedang" },
+                    { lnglat: [106.78545, -6.13550], kelurahan: "Pejagalan", indeksBanjir: 2.2, Kategori: "Tinggi" },
+                    { lnglat: [106.800759, -6.125643], kelurahan: "Penjaringan", indeksBanjir: 1.8, Kategori: "Sedang" }
+                ],
+                "Jakarta Timur": [
+                    { lnglat: [106.86651, -6.23471], kelurahan: "Bidara Cina", indeksBanjir: 2.4, Kategori: "Tinggi" },
+                    { lnglat: [106.86132, -6.21850], kelurahan: "Kampung Melayu", indeksBanjir: 2.2, Kategori: "Tinggi" },
+                    { lnglat: [106.90110, -6.19978], kelurahan: "Jatinegara Kaum", indeksBanjir: 1.6, Kategori: "Tinggi" }
+                ],
+                "Jakarta Selatan": [
+                    { lnglat: [106.82440, -6.23404], kelurahan: "Kuningan Barat", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.82211, -6.25085], kelurahan: "Mampang Prapatan", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.81625, -6.24694], kelurahan: "Pela Mampang", indeksBanjir: 1.8, Kategori: "Sedang" },
+                    { lnglat: [106.85500, -6.25884], kelurahan: "Rawajati", indeksBanjir: 2.0, Kategori: "Tinggi" }
+                ],
+            };
+
+pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg

@@ -255,7 +255,7 @@
                 const cityDetailsPopup = document.getElementById('cityDetailsPopup');
 
                 cityDetailsPopup.innerHTML = `
-                    <h4>${detail.kelurahan}</h4>
+                    <strong>Kelurahan : ${detail.kelurahan}</strong>
                     <p><i class="fas fa-tint"></i> Indeks Banjir: ${detail.indeksBanjir}</p>
                     <p><i class="fas fa-exclamation-triangle"></i> Kategori: ${detail.Kategori}</p>
                 `;

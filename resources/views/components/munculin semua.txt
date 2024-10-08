@@ -373,7 +373,7 @@
 
                 map.flyTo({
                     center: location.lnglat,
-                    zoom: 11,
+                    zoom: 12,
                     essential: true
                 });
 

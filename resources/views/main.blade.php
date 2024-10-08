@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
@@ -13,17 +11,19 @@
     <title>Dynamic Map Layout</title>
     <style>
         :root {
-            --navbar-height: 64px; /* Adjust this to match your navbar height */
-            --map-top-gap: 36px; /* Adjust this for the desired gap between navbar and map */
+            --navbar-height: 64px;
+            --map-top-gap: 36px;
+            --left-popup-top: 120px;
+            --left-popup-fullscreen-top: 20px;
         }
-
         @media (max-width: 1024px) {
             :root {
                 --navbar-height: 56px;
                 --map-top-gap: 8px;
+                --left-popup-top: 70px;
+                --left-popup-fullscreen-top: 15px;
             }
         }
-
         .navbar-hidden {
             transform: translateY(-100%);
         }
@@ -46,42 +46,69 @@
         .map-fullscreen {
             top: 0;
         }
+        #leftPopup {
+            position: fixed;
+            left: 20px;
+            transition: top 0.3s ease-in-out;
+            z-index: 1000;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var lastScrollTop = 0;
             var navbar = document.querySelector('header');
             var mapContainer = document.getElementById('map-container');
-            var threshold = 50; // Adjust this value to change how much scroll is needed to hide/show the navbar
+            var leftPopup = document.getElementById('leftPopup');
+            var threshold = 50;
 
-            window.addEventListener('scroll', function() {
+            function updateLayout() {
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
-                if (scrollTop > lastScrollTop && scrollTop > threshold) {
-                    // Scrolling down
+                if (scrollTop > threshold) {
+                    // Scrolled down
                     navbar.classList.remove('navbar-visible');
                     navbar.classList.add('navbar-hidden');
                     mapContainer.classList.remove('map-with-navbar');
                     mapContainer.classList.add('map-fullscreen');
-                } else if (scrollTop < lastScrollTop && scrollTop <= threshold) {
-                    // Scrolling up and near the top
+                    leftPopup.style.top = getComputedStyle(document.documentElement).getPropertyValue('--left-popup-fullscreen-top');
+                } else {
+                    // At top or scrolled up
                     navbar.classList.remove('navbar-hidden');
                     navbar.classList.add('navbar-visible');
                     mapContainer.classList.remove('map-fullscreen');
                     mapContainer.classList.add('map-with-navbar');
+                    leftPopup.style.top = getComputedStyle(document.documentElement).getPropertyValue('--left-popup-top');
                 }
                 
                 lastScrollTop = scrollTop;
-            });
+            }
+
+            // Call updateLayout on page load
+            updateLayout();
+
+            // Call updateLayout on scroll
+            window.addEventListener('scroll', updateLayout);
+
+            // Call updateLayout when the popup is opened
+            function onPopupOpen() {
+                updateLayout();
+            }
+
+            // Assuming you have a function or event that opens the popup,
+            // you should call onPopupOpen() when that happens.
+            // For example:
+            // document.querySelector('.open-popup-button').addEventListener('click', onPopupOpen);
         });
     </script>
 </head>
-
 <body class="h-full" style="background-color: #eae8e0">
     <x-header class="fixed top-0 left-0 right-0 z-50 navbar-visible navbar-transition" />
     <main class="h-full">
         <div id="map-container" class="map-with-navbar">
             <x-map-page />
+        </div>
+        <div id="leftPopup">
+            <!-- Your left popup content goes here -->
         </div>
     </main>
 </body>

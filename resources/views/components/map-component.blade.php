@@ -1,16 +1,110 @@
-<div id="map" style="height: 100%; width: 100%; position: relative; z-index: 1;"></div>
-
-@push('styles')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Map</title>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        .mobile-menu {
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
             position: relative;
-            z-index: 10;
+            z-index: 1;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+        #leftPopup {
+            position: fixed;
+            left: 20px;
+            top: 80px;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            overflow: hidden;
+            display: none;
+            transition: all 0.3s ease-in-out;
+            transform: translateX(-320px);
+        }
+        #leftPopup.visible {
+            transform: translateX(0);
+        }
+        #leftPopup h3 {
+            margin: 0;
+            padding: 15px;
+            background-color: #6366f1;
+            color: white;
+            font-size: 18px;
+        }
+        #leftPopup .content {
+            padding: 15px;
+        }
+        #cityDetailsPopup {
+            margin-top: 10px;
+            background-color: rgba(240, 240, 240, 0.9);
+            border-radius: 8px;
+            padding: 10px;
+            display: none;
+        }
+        .marker {
+            background-color: #6366f1;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+        }
+        .detail-marker {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0,0,0,0.3);
         }
     </style>
-@endpush
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Flood Map</h1>
+    </nav>
+    <div id="map"></div>
+    <div id="leftPopup">
+        <h3 id="popupTitle"></h3>
+        <div id="popupContent" class="content"></div>
+        <div id="cityDetailsPopup"></div>
+    </div>
 
-@push('scripts')
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -69,7 +163,7 @@
                 style: 'mapbox://styles/mapbox/dark-v11',
                 center: [106.8456, -6.2088], // Jakarta coordinates
                 zoom: 10,
-                pitch: 45, // Add 3D perspective
+                pitch: 45,
                 bearing: -17.6,
                 projection: 'globe'
             });
@@ -98,21 +192,14 @@
                 floodLocations.forEach((location) => {
                     const el = document.createElement('div');
                     el.className = 'marker';
-                    el.style.backgroundColor = '#3388ff';
-                    el.style.width = '18px';
-                    el.style.height = '18px';
-                    el.style.borderRadius = '50%';
-                    el.style.border = '2px solid #000';
+                    el.innerHTML = `<i class="fas fa-water"></i>`;
 
                     const marker = new mapboxgl.Marker(el)
                         .setLngLat(location.lnglat)
-                        .setPopup(new mapboxgl.Popup({ offset: 25 })
-                            .setHTML(`<h3>${location.city}</h3><p>Total Lokasi Banjir: ${location.count}</p>`))
                         .addTo(map);
 
                     marker.getElement().addEventListener('click', () => {
-                        console.log(`Marker clicked: ${location.city}`);
-                        toggleCityDetails(location.city);
+                        showFloodLocationPopup(location);
                     });
                 });
             });
@@ -120,52 +207,84 @@
             const detailMarkers = [];
             let currentCity = null;
 
-            window.showDetails = function(city) {
-                console.log(`Showing details for: ${city}`);
-                const cityCenter = floodLocations.find((loc) => loc.city === city)?.lnglat;
-                if (cityCenter) {
-                    map.flyTo({
-                        center: cityCenter,
-                        zoom: 10,
-                        essential: true
-                    });
-                }
+            function showFloodLocationPopup(location) {
+                const popupTitle = document.getElementById('popupTitle');
+                const popupContent = document.getElementById('popupContent');
+                const leftPopup = document.getElementById('leftPopup');
+                const cityDetailsPopup = document.getElementById('cityDetailsPopup');
+
+                popupTitle.textContent = location.city;
+                popupContent.innerHTML = `
+                    <p><i class="fas fa-map-marker-alt"></i> Total Lokasi Banjir: ${location.count}</p>
+                    <p><i class="fas fa-info-circle"></i> Klik pada marker detail untuk informasi lebih lanjut.</p>
+                `;
+                leftPopup.style.display = 'block';
+                leftPopup.classList.add('visible');
+                cityDetailsPopup.style.display = 'none';
+
+                map.flyTo({
+                    center: location.lnglat,
+                    zoom: 12,
+                    essential: true
+                });
 
                 // Clear previous markers
                 detailMarkers.forEach((marker) => marker.remove());
                 detailMarkers.length = 0;
 
-                cityDetails[city].forEach((location) => {
+                cityDetails[location.city].forEach((detail) => {
                     const el = document.createElement('div');
                     el.className = 'detail-marker';
-                    el.style.backgroundColor = location.indeksBanjir >= 2.0 ? "#FF0000" : "#FFA500";
-                    el.style.width = '14px';
-                    el.style.height = '14px';
-                    el.style.borderRadius = '50%';
-                    el.style.border = '1px solid #000';
+                    el.style.backgroundColor = detail.indeksBanjir >= 2.0 ? "#FF0000" : "#FFA500";
 
                     const marker = new mapboxgl.Marker(el)
-                        .setLngLat(location.lnglat)
-                        .setPopup(new mapboxgl.Popup({ offset: 25 })
-                            .setHTML(`<h3>${location.kelurahan}</h3><p>Indeks Banjir: ${location.indeksBanjir}<br>Kategori: ${location.Kategori}</p>`))
+                        .setLngLat(detail.lnglat)
                         .addTo(map);
+
+                    marker.getElement().addEventListener('click', () => {
+                        showCityDetailPopup(detail);
+                    });
 
                     detailMarkers.push(marker);
                 });
 
-                currentCity = city;
-            };
-
-            function toggleCityDetails(city) {
-                if (currentCity === city) {
-                    // Hide details if the same city is clicked
-                    detailMarkers.forEach((marker) => marker.remove());
-                    detailMarkers.length = 0;
-                    currentCity = null;
-                } else {
-                    showDetails(city);
-                }
+                currentCity = location.city;
             }
+
+            function showCityDetailPopup(detail) {
+                const cityDetailsPopup = document.getElementById('cityDetailsPopup');
+
+                cityDetailsPopup.innerHTML = `
+                    <h4>${detail.kelurahan}</h4>
+                    <p><i class="fas fa-tint"></i> Indeks Banjir: ${detail.indeksBanjir}</p>
+                    <p><i class="fas fa-exclamation-triangle"></i> Kategori: ${detail.Kategori}</p>
+                `;
+                cityDetailsPopup.style.display = 'block';
+
+                // Animate the appearance of the city details
+                cityDetailsPopup.style.opacity = '0';
+                cityDetailsPopup.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    cityDetailsPopup.style.transition = 'all 0.3s ease-in-out';
+                    cityDetailsPopup.style.opacity = '1';
+                    cityDetailsPopup.style.transform = 'translateY(0)';
+                }, 50);
+            }
+
+            // Navbar visibility
+            let lastScrollTop = 0;
+            const navbar = document.querySelector('.navbar');
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop) {
+                    navbar.classList.add('hidden');
+                } else {
+                    navbar.classList.remove('hidden');
+                }
+                lastScrollTop = scrollTop;
+            });
         });
     </script>
-@endpush  
+</body>
+</html>

@@ -133,11 +133,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Define the flood locations and city details
             const floodLocations = [
-                { lnglat: [106.863956, -6.138414], city: "Jakarta Utara", count: 8 },
-                { lnglat: [106.7570, -6.1615], city: "Jakarta Barat", count: 15 },
-                { lnglat: [106.900447, -6.225014], city: "Jakarta Timur", count: 3 },
-                { lnglat: [106.810600, -6.261493], city: "Jakarta Selatan", count: 4 },
-                { lnglat: [106.834091, -6.186486], city: "Jakarta Pusat", count: 6 }
+                { lnglat: [106.863956, -6.138414], city: "Jakarta Utara"},
+                { lnglat: [106.7570, -6.1615], city: "Jakarta Barat"},
+                { lnglat: [106.900447, -6.225014], city: "Jakarta Timur"},
+                { lnglat: [106.810600, -6.261493], city: "Jakarta Selatan" },
+                { lnglat: [106.834091, -6.186486], city: "Jakarta Pusat"}
             ];
 
             const cityDetails = {
@@ -352,11 +352,6 @@
                 const leftPopup = document.getElementById('leftPopup');
                 const cityDetailsPopup = document.getElementById('cityDetailsPopup');
 
-                if (!popupTitle || !popupContent || !leftPopup || !cityDetailsPopup) {
-                    console.error('One or more required DOM elements are missing');
-                    return;
-                }
-
                 popupTitle.textContent = location.city;
                 
                 // Count areas with indeksBanjir >= 1.5
@@ -373,7 +368,7 @@
 
                 map.flyTo({
                     center: location.lnglat,
-                    zoom: 11,
+                    zoom: 12,
                     essential: true
                 });
 
@@ -382,25 +377,25 @@
                 detailMarkers.length = 0;
 
                 cityDetails[location.city].forEach((detail) => {
-                    const el = document.createElement('div');
-                    el.className = 'detail-marker';
-                    el.style.backgroundColor = detail.indeksBanjir >= 2.0 ? "#FF0000" : 
-                                            detail.indeksBanjir >= 1.5 ? "#FFA500" : "#00FF00";
+                    if (detail.indeksBanjir >= 1.5) {
+                        const el = document.createElement('div');
+                        el.className = 'detail-marker';
+                        el.style.backgroundColor = detail.indeksBanjir >= 2.0 ? "#FF0000" : "#FFA500";
 
-                    const marker = new mapboxgl.Marker(el)
-                        .setLngLat(detail.lnglat)
-                        .addTo(map);
+                        const marker = new mapboxgl.Marker(el)
+                            .setLngLat(detail.lnglat)
+                            .addTo(map);
 
-                    marker.getElement().addEventListener('click', () => {
-                        showCityDetailPopup(detail);
-                    });
+                        marker.getElement().addEventListener('click', () => {
+                            showCityDetailPopup(detail);
+                        });
 
-                    detailMarkers.push(marker);
+                        detailMarkers.push(marker);
+                    }
                 });
 
                 currentCity = location.city;
             }
-
 
             function showCityDetailPopup(detail) {
                 currentDetail = detail;

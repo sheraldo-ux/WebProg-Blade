@@ -157,6 +157,30 @@
                 ],
             };
 
+        async function fetchWeatherData(lat, lon) {
+            const apiKey = '3d3081b6edd1db1586dd4ae459aeab56';
+            const url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const forecastList = data.list.map(item => ({
+                    datetime: item.dt_txt,
+                    temperature: item.main.temp,
+                    description: item.weather[0].description,
+                    icon: item.weather[0].icon
+                }));
+
+                return forecastList;
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                throw error;
+            }
+        }
+
+
+
             mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg';
             const map = new mapboxgl.Map({
                 container: 'map',
@@ -258,10 +282,37 @@
                     <h4>${detail.kelurahan}</h4>
                     <p><i class="fas fa-tint"></i> Indeks Banjir: ${detail.indeksBanjir}</p>
                     <p><i class="fas fa-exclamation-triangle"></i> Kategori: ${detail.Kategori}</p>
+                    <h5>Weather Forecast:</h5>
+                    <div id="weatherForecast"></div>
                 `;
                 cityDetailsPopup.style.display = 'block';
 
-                // Animate the appearance of the city details
+                // Fetch the weather data using latitude and longitude
+                fetchWeatherData(detail.lnglat[1], detail.lnglat[0]).then(forecast => {
+                    const weatherForecastDiv = document.getElementById('weatherForecast');
+                    weatherForecastDiv.innerHTML = ''; // Clear previous forecasts
+
+                    if (forecast.length) {
+                        forecast.forEach(item => {
+                            const weatherItem = document.createElement('div');
+                            weatherItem.className = 'weather-item';
+                            weatherItem.innerHTML = `
+                                <p>${item.datetime}</p>
+                                <p>Temperature: ${item.temperature} °C</p>
+                                <p>Condition: ${item.description}</p>
+                                <img src="http://openweathermap.org/img/wn/${item.icon}.png" alt="${item.description}">
+                            `;
+                            weatherForecastDiv.appendChild(weatherItem);
+                        });
+                    } else {
+                        weatherForecastDiv.innerHTML = '<p>No forecast data available.</p>';
+                    }
+                }).catch(err => {
+                    console.error('Failed to fetch weather data:', err);
+                    const weatherForecastDiv = document.getElementById('weatherForecast');
+                    weatherForecastDiv.innerHTML = '<p>Error fetching weather data.</p>';
+                });
+
                 cityDetailsPopup.style.opacity = '0';
                 cityDetailsPopup.style.transform = 'translateY(20px)';
                 setTimeout(() => {
@@ -271,7 +322,6 @@
                 }, 50);
             }
 
-            // Navbar visibility
             let lastScrollTop = 0;
             const navbar = document.querySelector('.navbar');
 

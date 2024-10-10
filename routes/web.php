@@ -30,3 +30,6 @@ Route::get('/support', function () {
     return view('support');
 });
 
+Route::get('/tesloc', function () {
+    return view('tesloc');
+});

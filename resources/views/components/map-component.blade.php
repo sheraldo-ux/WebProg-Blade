@@ -181,53 +181,102 @@
 
 
 
-            mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg';
-            const map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/dark-v11',
-                center: [106.8456, -6.2088], // Jakarta coordinates
-                zoom: 10,
-                pitch: 45,
-                bearing: -17.6,
-                projection: 'globe'
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg';
+    
+    // Define a default map view in case geolocation fails
+    let defaultCoordinates = [106.8456, -6.2088]; // Jakarta coordinates
+    let zoomLevel = 10;
+
+    // Create the map
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: defaultCoordinates,
+        zoom: zoomLevel,
+        pitch: 45,
+        bearing: -17.6,
+        projection: 'globe'
+    });
+
+    // Try to get the user's current location using Geolocation API
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const userCoordinates = [position.coords.longitude, position.coords.latitude];
+            
+            // Center the map on the user's location
+            map.setCenter(userCoordinates);
+            map.setZoom(12);  // Adjust the zoom to fit the user location better
+
+            // Add a circle layer to indicate user's location
+            map.addSource('user-location', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: [{
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: userCoordinates
+                        }
+                    }]
+                }
             });
 
-            map.on('load', () => {
-                // Add 3D building layer
-                map.addLayer({
-                    'id': '3d-buildings',
-                    'source': 'composite',
-                    'source-layer': 'building',
-                    'filter': ['==', 'extrude', 'true'],
-                    'type': 'fill-extrusion',
-                    'minzoom': 15,
-                    'paint': {
-                        'fill-extrusion-color': '#aaa',
-                        'fill-extrusion-height': [
-                            "interpolate", ["linear"], ["zoom"],
-                            15, 0,
-                            15.05, ["get", "height"]
-                        ],
-                        'fill-extrusion-opacity': .6
-                    }
-                });
-
-                // Add markers for flood locations
-                floodLocations.forEach((location) => {
-                    const el = document.createElement('div');
-                    el.className = 'marker';
-                    el.innerHTML = `<i class="fas fa-water"></i>`;
-
-                    const marker = new mapboxgl.Marker(el)
-                        .setLngLat(location.lnglat)
-                        .addTo(map);
-
-                    marker.getElement().addEventListener('click', () => {
-                        showFloodLocationPopup(location);
-                    });
-                });
+            map.addLayer({
+                id: 'user-location-circle',
+                type: 'circle',
+                source: 'user-location',
+                paint: {
+                    'circle-radius': 10,
+                    'circle-color': '#007cbf',
+                    'circle-opacity': 0.8
+                }
             });
 
+        }, error => {
+            console.error('Geolocation error:', error);
+            // If error occurs or permission is denied, the map will default to Jakarta
+        });
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+        // If geolocation isn't available, the map stays at the default center
+    }
+
+    map.on('load', () => {
+        // Add 3D building layer (unchanged)
+        map.addLayer({
+            'id': '3d-buildings',
+            'source': 'composite',
+            'source-layer': 'building',
+            'filter': ['==', 'extrude', 'true'],
+            'type': 'fill-extrusion',
+            'minzoom': 15,
+            'paint': {
+                'fill-extrusion-color': '#aaa',
+                'fill-extrusion-height': [
+                    "interpolate", ["linear"], ["zoom"],
+                    15, 0,
+                    15.05, ["get", "height"]
+                ],
+                'fill-extrusion-opacity': .6
+            }
+        });
+
+        // Add markers for flood locations (unchanged)
+        floodLocations.forEach((location) => {
+            const el = document.createElement('div');
+            el.className = 'marker';
+            el.innerHTML = `<i class="fas fa-water"></i>`;
+
+            const marker = new mapboxgl.Marker(el)
+                .setLngLat(location.lnglat)
+                .addTo(map);
+
+            marker.getElement().addEventListener('click', () => {
+                showFloodLocationPopup(location);
+            });
+        });
+    });
             const detailMarkers = [];
             let currentCity = null;
 

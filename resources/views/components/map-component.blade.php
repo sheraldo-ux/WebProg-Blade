@@ -92,6 +92,22 @@
             cursor: pointer;
             box-shadow: 0 0 8px rgba(0,0,0,0.3);
         }
+        .flood-popup.red .mapboxgl-popup-content {
+            background-color: rgba(255, 0, 0, 0.7);  /* Red for dangerous */
+            color: white;
+        }
+
+        .flood-popup.green .mapboxgl-popup-content {
+            background-color: rgba(0, 128, 0, 0.7);  /* Green for safe */
+            color: white;
+        }
+
+        .mapboxgl-popup-content {
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -179,10 +195,86 @@
             }
         }
 
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async position => {
+        const userCoordinates = [position.coords.longitude, position.coords.latitude];
+
+        // Center the map on the user's location
+        map.setCenter(userCoordinates);
+        map.setZoom(12);
+
+        // Perform reverse geocoding to get the city or place name
+        const placeName = await reverseGeocode(userCoordinates[0], userCoordinates[1]);
+
+        // Fetch flood data based on the user's location
+        const floodData = await getFloodRisk(userCoordinates);
+
+        // Display popup with flood information
+        showFloodPopup(floodData, placeName, userCoordinates);
+
+    }, error => {
+        console.error('Geolocation error:', error);
+    });
+}
+async function getFloodRisk([lng, lat]) {
+    // Simulated function to get flood risk data. Replace this with an actual data source.
+    // Fetch from API or local dataset. The data might look something like this:
+    const floodLocationData = {
+        safeAreas: [[-100, 40], [-101, 41]],  // Example safe areas (long, lat)
+        dangerousAreas: [[-102, 42], [-103, 43]],  // Example dangerous areas
+    };
+
+    // Dummy logic to decide whether the area is safe or dangerous.
+    // You should replace this with real data logic based on floodLocationData
+    const isDangerous = floodLocationData.dangerousAreas.some(([long, latt]) => (
+        Math.abs(lng - long) < 0.1 && Math.abs(lat - latt) < 0.1
+    ));
+
+    return {
+        floodIndex: isDangerous ? 5 : 1,  // Example flood index
+        floodRisk: isDangerous ? 'dangerous' : 'safe',
+    };
+}
+function showFloodPopup(floodData, placeName, userCoordinates) {
+    const popupColor = floodData.floodRisk === 'dangerous' ? 'red' : 'green';  // Red for dangerous, green for safe
+
+    const popup = new mapboxgl.Popup({
+        closeOnClick: false,
+        offset: 25,
+        className: `flood-popup ${popupColor}`,  // Dynamically add color class to the popup
+    })
+        .setLngLat(userCoordinates)
+        .setHTML(`
+            <div>
+                <h3 style="color: ${popupColor};">Flood Risk: ${floodData.floodRisk.toUpperCase()}</h3>
+                <p><strong>Location:</strong> ${placeName}</p>
+                <p><strong>Coordinates:</strong> ${userCoordinates[1].toFixed(4)}, ${userCoordinates[0].toFixed(4)}</p>
+                <p><strong>Flood Index:</strong> ${floodData.floodIndex}</p>
+            </div>
+        `)
+        .addTo(map);
+}
 
 
-        mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg';
+    async function reverseGeocode(lng, lat) {
+    const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxgl.accessToken}&types=place,locality,neighborhood,address`;
     
+    try {
+        const response = await fetch(geocodeUrl);
+        const data = await response.json();
+        // Find the place name from the data, or use lat/long if not available
+        if (data.features && data.features.length > 0) {
+            return data.features[0].place_name;
+        } else {
+            return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;  // Default to lat/lng if no name found
+        }
+    } catch (error) {
+        console.error('Error with reverse geocoding:', error);
+        return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;  // Fallback to lat/lng
+    }
+}
+
     // Define a default map view in case geolocation fails
     let defaultCoordinates = [106.8456, -6.2088]; // Jakarta coordinates
     let zoomLevel = 10;
@@ -200,47 +292,51 @@
 
     // Try to get the user's current location using Geolocation API
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
+        navigator.geolocation.getCurrentPosition(async position => {
             const userCoordinates = [position.coords.longitude, position.coords.latitude];
             
             // Center the map on the user's location
             map.setCenter(userCoordinates);
-            map.setZoom(12);  // Adjust the zoom to fit the user location better
+            map.setZoom(12);
 
-            // Add a circle layer to indicate user's location
-            map.addSource('user-location', {
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features: [{
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: userCoordinates
-                        }
-                    }]
-                }
+            // Perform reverse geocoding to get the region or village
+            const placeName = await reverseGeocode(userCoordinates[0], userCoordinates[1]);
+
+            // Add a clickable marker for the user's location
+            const el = document.createElement('div');
+            el.className = 'marker';
+            // Delete ni bg kalo ga demen pake logo markernya
+            el.innerHTML = `<i class="fas fa-map-marker-alt"></i>`;
+            el.style.backgroundColor = '#818cf8'; // Indigo-400 color
+            el.style.border = '2px solid white';  // White outline
+
+            const marker = new mapboxgl.Marker(el)
+                .setLngLat(userCoordinates)
+                .addTo(map);
+
+            // Show a popup on the left when the marker is clicked
+            marker.getElement().addEventListener('click', () => {
+                showUserLocationPopup(placeName, userCoordinates);
             });
-
-            map.addLayer({
-                id: 'user-location-circle',
-                type: 'circle',
-                source: 'user-location',
-                paint: {
-                    'circle-radius': 10,
-                    'circle-color': '#007cbf',
-                    'circle-opacity': 0.8
-                }
-            });
-
         }, error => {
             console.error('Geolocation error:', error);
-            // If error occurs or permission is denied, the map will default to Jakarta
         });
-    } else {
-        console.error('Geolocation is not supported by this browser.');
-        // If geolocation isn't available, the map stays at the default center
     }
+    function showUserLocationPopup(placeName, userCoordinates) {
+        const popupTitle = document.getElementById('popupTitle');
+        const popupContent = document.getElementById('popupContent');
+        const leftPopup = document.getElementById('leftPopup');
+
+        popupTitle.textContent = 'Your Location';
+        popupContent.innerHTML = `
+            <p><i class="fas fa-map-marker-alt"></i> Location: ${placeName}</p>
+            <p><i class="fas fa-info-circle"></i> Coordinates: ${userCoordinates[1].toFixed(4)}, ${userCoordinates[0].toFixed(4)}</p>
+        `;
+
+        leftPopup.style.display = 'block';
+        leftPopup.classList.add('visible');
+    }
+
 
     map.on('load', () => {
         // Add 3D building layer (unchanged)

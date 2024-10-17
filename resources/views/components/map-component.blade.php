@@ -295,58 +295,190 @@
                 }
             }
 
-            mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg';
-            const map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/dark-v11',
-                center: [106.8456, -6.2088], // Jakarta coordinates
-                zoom: 10,
-                pitch: 45,
-                bearing: -17.6,
-                projection: 'globe'
-            });
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kb3hkIiwiYSI6ImNtMXNzc3o2eDBham0ya3BybjAzdHh6dTUifQ.j4wY9CcmmjYGbPizv6b-Dg';
+    
+    // Define a default map view in case geolocation fails
+    let defaultCoordinates = [106.8456, -6.2088]; // Jakarta coordinates
+    let zoomLevel = 10;
 
-            map.on('load', () => {
-                // Add 3D building layer
-                map.addLayer({
-                    'id': '3d-buildings',
-                    'source': 'composite',
-                    'source-layer': 'building',
-                    'filter': ['==', 'extrude', 'true'],
-                    'type': 'fill-extrusion',
-                    'minzoom': 15,
-                    'paint': {
-                        'fill-extrusion-color': '#aaa',
-                        'fill-extrusion-height': [
-                            "interpolate", ["linear"], ["zoom"],
-                            15, 0,
-                            15.05, ["get", "height"]
-                        ],
-                        'fill-extrusion-opacity': .6
+    // Create the map
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: defaultCoordinates,
+        zoom: zoomLevel,
+        pitch: 45,
+        bearing: -17.6,
+        projection: 'globe'
+    });
+
+    // Try to get the user's current location using Geolocation API
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+        const userCoordinates = [position.coords.longitude, position.coords.latitude];
+        
+        // Center the map on the user's location
+        map.setCenter(userCoordinates);
+        map.setZoom(12);
+
+        // Add a circle layer to indicate user's location
+        map.addSource('user-location', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: [{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: userCoordinates
                     }
-                });
+                }]
+            }
+        });
 
-                // Add markers for flood locations
-                floodLocations.forEach((location) => {
-                    const el = document.createElement('div');
-                    el.className = 'marker';
-                    el.innerHTML = `<i class="fas fa-water"></i>`;
+        map.addLayer({
+            id: 'user-location-circle',
+            type: 'circle',
+            source: 'user-location',
+            paint: {
+                'circle-radius': 10,
+                'circle-color': '#007cbf',
+                'circle-opacity': 0.8
+            }
+        });
 
-                    const marker = new mapboxgl.Marker(el)
-                        .setLngLat(location.lnglat)
-                        .addTo(map);
+        // Get the nearest flood location
+        const nearest = getNearestFloodLocation(userCoordinates);
 
-                    marker.getElement().addEventListener('click', () => {
-                        showFloodLocationPopup(location);
-                    });
-                });
+        // Add a marker for user's location
+        const el = document.createElement('div');
+        el.className = 'marker';
+        el.innerHTML = '<i class="fas fa-user"></i>';
+        el.style.backgroundColor = getMarkerColor(nearest.indeksBanjir);
+
+        const userMarker = new mapboxgl.Marker(el)
+            .setLngLat(userCoordinates)
+            .addTo(map);
+
+        // Show user location popup
+        showUserLocationPopup(userCoordinates, nearest);
+
+        // Add click event to user marker
+        userMarker.getElement().addEventListener('click', () => {
+            showUserLocationPopup(userCoordinates, nearest);
+        });
+
+    }, error => {
+        console.error('Geolocation error:', error);
+        // If error occurs or permission is denied, the map will default to Jakarta
+    });
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+        // If geolocation isn't available, the map stays at the default center
+    }
+
+    // Make sure these functions are defined earlier in your script
+
+    function getNearestFloodLocation(userCoords) {
+        let nearest = null;
+        let minDistance = Infinity;
+
+        for (const city in cityDetails) {
+            cityDetails[city].forEach(location => {
+                const distance = getDistance(userCoords, location.lnglat);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearest = location;
+                }
             });
+        }
 
+        return nearest;
+    }
+
+    function getDistance(coord1, coord2) {
+        const [lon1, lat1] = coord1;
+        const [lon2, lat2] = coord2;
+        const R = 6371; // Radius of the Earth in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    function getMarkerColor(index) {
+        if (index >= 2.0) return "#FF0000";
+        if (index >= 1.5) return "#FFA500";
+        return "#00FF00";
+    }
+
+    function showUserLocationPopup(userCoords, nearest) {
+        closeAllPopups();  // Tutup semua popup ketika membuka lokasi pengguna
+        const popupTitle = document.getElementById('popupTitle');
+        const popupContent = document.getElementById('popupContent');
+        const leftPopup = document.getElementById('leftPopup');
+        const toggleButton = document.getElementById('toggleButton');
+
+        popupTitle.textContent = "Your Location";
+        popupContent.innerHTML = `
+            <p><i class="fas fa-map-marker-alt"></i> Coordinates: ${userCoords[1].toFixed(4)}, ${userCoords[0].toFixed(4)}</p>
+            <p><i class="fas fa-tint"></i> Nearest Flood Index: ${nearest.indeksBanjir}</p>
+            <p><i class="fas fa-exclamation-triangle"></i> Category: ${nearest.Kategori}</p>
+            <p><i class="fas fa-info-circle"></i> Nearest Location: ${nearest.kelurahan}</p>
+        `;
+        leftPopup.style.display = 'block';
+        leftPopup.classList.add('visible');
+        toggleButton.style.display = 'block';
+        toggleButton.textContent = 'Weather Check';
+
+        // Store the current location for weather checking
+        currentDetail = { lnglat: userCoords, kelurahan: "Your Location" };
+    }
+
+    map.on('load', () => {
+        // Add 3D building layer (unchanged)
+        map.addLayer({
+            'id': '3d-buildings',
+            'source': 'composite',
+            'source-layer': 'building',
+            'filter': ['==', 'extrude', 'true'],
+            'type': 'fill-extrusion',
+            'minzoom': 15,
+            'paint': {
+                'fill-extrusion-color': '#aaa',
+                'fill-extrusion-height': [
+                    "interpolate", ["linear"], ["zoom"],
+                    15, 0,
+                    15.05, ["get", "height"]
+                ],
+                'fill-extrusion-opacity': .6
+            }
+        });
+
+        // Add markers for flood locations (unchanged)
+        floodLocations.forEach((location) => {
+            const el = document.createElement('div');
+            el.className = 'marker';
+            el.innerHTML = `<i class="fas fa-water"></i>`;
+
+            const marker = new mapboxgl.Marker(el)
+                .setLngLat(location.lnglat)
+                .addTo(map);
+
+            marker.getElement().addEventListener('click', () => {
+                showFloodLocationPopup(location);
+            });
+        });
+    });
             const detailMarkers = [];
             let currentCity = null;
             let currentDetail = null;
 
             function showFloodLocationPopup(location) {
+                closeAllPopups(true);  // Tutup semua popup kecuali lokasi pengguna
                 const popupTitle = document.getElementById('popupTitle');
                 const popupContent = document.getElementById('popupContent');
                 const leftPopup = document.getElementById('leftPopup');
@@ -369,7 +501,6 @@
                 `;
                 leftPopup.style.display = 'block';
                 leftPopup.classList.add('visible');
-                cityDetailsPopup.style.display = 'none';
 
                 map.flyTo({
                     center: location.lnglat,
@@ -403,10 +534,11 @@
 
 
             function showCityDetailPopup(detail) {
-                currentDetail = detail;
                 const cityDetailsPopup = document.getElementById('cityDetailsPopup');
                 const weatherPopup = document.getElementById('weatherPopup');
                 const toggleButton = document.getElementById('toggleButton');
+
+                currentDetail = detail;
 
                 cityDetailsPopup.innerHTML = `
                     <strong>Kelurahan : ${detail.kelurahan}</strong>
@@ -464,22 +596,26 @@
                 });
     }
 
-            const toggleButton = document.getElementById('toggleButton');
-            toggleButton.addEventListener('click', () => {
-                const cityDetailsPopup = document.getElementById('cityDetailsPopup');
-                const weatherPopup = document.getElementById('weatherPopup');
+    const toggleButton = document.getElementById('toggleButton');
+        toggleButton.addEventListener('click', () => {
+        const cityDetailsPopup = document.getElementById('cityDetailsPopup');
+        const weatherPopup = document.getElementById('weatherPopup');
 
-                if (cityDetailsPopup.style.display === 'block') {
-                    cityDetailsPopup.style.display = 'none';
-                    weatherPopup.style.display = 'block';
-                    toggleButton.textContent = 'Show City Details';
-                    showWeatherPopup(currentDetail);
-                } else {
-                    cityDetailsPopup.style.display = 'block';
-                    weatherPopup.style.display = 'none';
-                    toggleButton.textContent = 'Weather Check';
-                }
-            });
+        if (weatherPopup.style.display === 'none') {
+            weatherPopup.style.display = 'block';
+            toggleButton.textContent = 'Show Details';
+            showWeatherPopup(currentDetail);
+        } else {
+            weatherPopup.style.display = 'none';
+            if (currentDetail.kelurahan === "Your Location") {
+                const userCoords = currentDetail.lnglat;
+                const nearest = getNearestFloodLocation(userCoords);
+                showUserLocationPopup(userCoords, nearest);
+            } else {
+                showCityDetailPopup(currentDetail);
+            }
+        }
+    });
 
             let lastScrollTop = 0;
             const navbar = document.querySelector('.navbar');
@@ -494,6 +630,85 @@
                 lastScrollTop = scrollTop;
             });
         });
+
+        function getNearestFloodLocation(userCoords) {
+            let nearest = null;
+            let minDistance = Infinity;
+
+            for (const city in cityDetails) {
+                cityDetails[city].forEach(location => {
+                    const distance = getDistance(userCoords, location.lnglat);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearest = location;
+                    }
+                });
+            }
+
+            return nearest;
+        }
+
+        function getDistance(coord1, coord2) {
+            const [lon1, lat1] = coord1;
+            const [lon2, lat2] = coord2;
+            const R = 6371; // Radius of the Earth in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function getMarkerColor(index) {
+            if (index >= 2.0) return "#FF0000";
+            if (index >= 1.5) return "#FFA500";
+            return "#00FF00";
+        }
+
+        function showUserLocationPopup(userCoords, nearest) {
+            closeAllPopups();
+            const popupTitle = document.getElementById('popupTitle');
+            const popupContent = document.getElementById('popupContent');
+            const leftPopup = document.getElementById('leftPopup');
+            const toggleButton = document.getElementById('toggleButton');
+
+            popupTitle.textContent = "Your Location";
+            popupContent.innerHTML = `
+                <p><i class="fas fa-map-marker-alt"></i> Coordinates: ${userCoords[1].toFixed(4)}, ${userCoords[0].toFixed(4)}</p>
+                <p><i class="fas fa-tint"></i> Nearest Flood Index: ${nearest.indeksBanjir}</p>
+                <p><i class="fas fa-exclamation-triangle"></i> Category: ${nearest.Kategori}</p>
+                <p><i class="fas fa-info-circle"></i> Nearest Location: ${nearest.kelurahan}</p>
+            `;
+            leftPopup.style.display = 'block';
+            leftPopup.classList.add('visible');
+            toggleButton.style.display = 'block';
+            toggleButton.textContent = 'Weather Check';
+
+            // Store the current location for weather checking
+            currentDetail = { lnglat: userCoords, kelurahan: "Your Location" };
+        }
+
+        function closeAllPopups(exceptUser = false) {
+            const leftPopup = document.getElementById('leftPopup');
+            const cityDetailsPopup = document.getElementById('cityDetailsPopup');
+            const weatherPopup = document.getElementById('weatherPopup');
+            const toggleButton = document.getElementById('toggleButton');
+
+            if (exceptUser) {
+                // Hanya tutup popup yang bukan lokasi pengguna
+                if (popupTitle.textContent !== "Your Location") {
+                    leftPopup.style.display = 'none';
+                }
+            } else {
+                leftPopup.style.display = 'none';
+            }
+            
+            cityDetailsPopup.style.display = 'none';
+            weatherPopup.style.display = 'none';
+            toggleButton.style.display = 'none';
+        }
     </script>
 </body>
 </html>

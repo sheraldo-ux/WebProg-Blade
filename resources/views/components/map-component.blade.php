@@ -273,6 +273,96 @@
                 ],
             };
 
+            function requestGeolocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const userCoordinates = [position.coords.longitude, position.coords.latitude];
+                        
+                        // Center the map on the user's location
+                        map.setCenter(userCoordinates);
+                        map.setZoom(12);
+
+                        // Add or update the circle layer for user's location
+                        if (map.getSource('user-location')) {
+                            map.getSource('user-location').setData({
+                                type: 'FeatureCollection',
+                                features: [{
+                                    type: 'Feature',
+                                    geometry: {
+                                        type: 'Point',
+                                        coordinates: userCoordinates
+                                    }
+                                }]
+                            });
+                        } else {
+                            map.addSource('user-location', {
+                                type: 'geojson',
+                                data: {
+                                    type: 'FeatureCollection',
+                                    features: [{
+                                        type: 'Feature',
+                                        geometry: {
+                                            type: 'Point',
+                                            coordinates: userCoordinates
+                                        }
+                                    }]
+                                }
+                            });
+
+                            map.addLayer({
+                                id: 'user-location-circle',
+                                type: 'circle',
+                                source: 'user-location',
+                                paint: {
+                                    'circle-radius': 10,
+                                    'circle-color': '#007cbf',
+                                    'circle-opacity': 0.8
+                                }
+                            });
+                        }
+
+                        // Get the nearest flood location
+                        const nearest = getNearestFloodLocation(userCoordinates);
+
+                        // Add or update marker for user's location
+                        if (window.userMarker) {
+                            window.userMarker.setLngLat(userCoordinates);
+                        } else {
+                            const el = document.createElement('div');
+                            el.className = 'marker';
+                            el.innerHTML = '<i class="fas fa-user"></i>';
+                            el.style.backgroundColor = getMarkerColor(nearest.indeksBanjir);
+
+                            window.userMarker = new mapboxgl.Marker(el)
+                                .setLngLat(userCoordinates)
+                                .addTo(map);
+
+                            // Add click event to user marker
+                            window.userMarker.getElement().addEventListener('click', () => {
+                                showUserLocationPopup(userCoordinates, nearest);
+                            });
+                        }
+
+                        // Show user location popup
+                        showUserLocationPopup(userCoordinates, nearest);
+                    },
+                    error => {
+                        console.error('Geolocation error:', error);
+                        alert('Unable to retrieve your location. Please enable location services and refresh the page.');
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+                alert('Geolocation is not supported by your browser. Some features may not work correctly.');
+            }
+        }
+
             async function fetchWeatherData(lat, lon) {
                 const apiKey = '3d3081b6edd1db1586dd4ae459aeab56';
                 const url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
@@ -472,6 +562,7 @@
                 showFloodLocationPopup(location);
             });
         });
+        requestGeolocation();
     });
             const detailMarkers = [];
             let currentCity = null;

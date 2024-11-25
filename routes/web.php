@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FloodLocationController;
 
 Route::get('/', function () {
     return view('animation');
@@ -30,6 +31,4 @@ Route::get('/support', function () {
     return view('support');
 });
 
-Route::get('/tesloc', function () {
-    return view('tesloc');
-});
+Route::get('/flood-locations', [FloodLocationController::class, 'index']);

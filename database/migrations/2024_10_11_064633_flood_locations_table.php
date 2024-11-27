@@ -28,8 +28,8 @@ return new class extends Migration
     {
         Schema::dropIfExists('flood_locations');
 
-        Schema::table('flood_locations', function (Blueprint $table) {
-            $table->dropColumn('flood_count');
-        });
+        // Schema::table('flood_locations', function (Blueprint $table) {
+        //     $table->dropColumn('flood_count');
+        // });
     }
 };

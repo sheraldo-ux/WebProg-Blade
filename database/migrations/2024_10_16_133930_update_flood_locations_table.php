@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('flood_locations', function (Blueprint $table) {
             $table->decimal('longitude', 11, 8)->change();
-            $table->integer('flood_count')->after('longitude');
+            // $table->integer('flood_count')->after('longitude');
         });
     }
 
@@ -23,8 +23,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('flood_locations', function (Blueprint $table) {
-            $table->dropColumn('flood_count');
-            $table->string('longitude')->change();
+            // $table->dropColumn('flood_count');
+            // $table->string('longitude')->change();
+            $table->decimal('longitude', 10, 8)->change();
         });
     }
 };

@@ -93,8 +93,8 @@
                 <div class="text-sm text-gray-500 mb-4">
                     Posted by {{ $item->user->username }} on {{ $item->created_at->format('F j, Y') }}
                 </div>
-                <div class="prose max-w-none" id="content-{{ $item->id }}">
-                    {{ $item->content }}
+                <div class="prose max-w-none news-content">
+                    {!! $item->content !!}
                 </div>
             </article>
         @endforeach
@@ -110,29 +110,40 @@
     const formatButtons = document.querySelectorAll('.format-btn');
 
     let consecutiveEnters = 0;
+    let isSelecting = false;
+    let scrollPosition = 0;
+
+    // Replace the previous mousedown/selectstart handlers with these
+    document.addEventListener('mousedown', function(e) {
+        const isNewsContent = e.target.closest('.news-content, #editor');
+        if (isNewsContent) {
+            isSelecting = true;
+            scrollPosition = window.scrollY;
+        }
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (isSelecting) {
+            window.scrollTo(0, scrollPosition);
+        }
+    });
+
+    document.addEventListener('mouseup', function() {
+        isSelecting = false;
+    });
+
+    // Prevent default selection behavior
+    document.addEventListener('selectstart', function(e) {
+        const isNewsContent = e.target.closest('.news-content, #editor');
+        if (!isNewsContent) {
+            e.preventDefault();
+        }
+    });
 
     // Initialize editor
     document.addEventListener('DOMContentLoaded', function() {
-        // Convert existing posts' content
-        document.querySelectorAll('[id^="content-"]').forEach(element => {
-            element.innerHTML = element.textContent.trim();
-        });
-
         // Handle form submission
         const form = editor.closest('form');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default submission
-            
-            // Get the content from editor
-            const content = editor.innerHTML.trim();
-            
-            // Validate content
-            if (!content) {
-                alert('Please enter some content');
-                return;
-            }
-            
-            // Update hidden input with the editor content
             hiddenInput.value = content;
             
             // Submit the form
@@ -366,14 +377,41 @@
         min-height: 150px;
     }
 
-    #editor ul {
+    #editor ul, .prose ul {
         list-style-type: disc;
         padding-left: 2em;
+        margin: 1em 0;
     }
 
-    #editor ol {
+    #editor ol, .prose ol {
         list-style-type: decimal;
         padding-left: 2em;
+        margin: 1em 0;
+    }
+
+    .prose li {
+        margin: 0.5em 0;
+    }
+
+    .news-content ul {
+        list-style-type: disc !important;
+        padding-left: 2em !important;
+        margin: 1em 0 !important;
+    }
+
+    .news-content ol {
+        list-style-type: decimal !important;
+        padding-left: 2em !important;
+        margin: 1em 0 !important;
+    }
+
+    .news-content li {
+        display: list-item !important;
+        margin: 0.5em 0 !important;
+    }
+
+    .news-content li::marker {
+        display: inline !important;
     }
 </style>
 @endpush

@@ -6,7 +6,11 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
+<<<<<<< HEAD
     return view('animation');
+=======
+    return view('home');
+>>>>>>> 239d014d65d1761e3fe4b1dc9383586ab1678b64
 });
 
 Route::get('/map', function () {

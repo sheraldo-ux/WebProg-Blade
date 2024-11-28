@@ -273,6 +273,7 @@
                 ],
             };
 
+
             async function fetchWeatherData(lat, lon) {
                 const apiKey = '3d3081b6edd1db1586dd4ae459aeab56';
                 const url = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;

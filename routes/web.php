@@ -54,3 +54,4 @@ Route::post('/profile/update-photo', [UserController::class, 'updateProfilePhoto
 // News Routes
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::post('/news', [NewsController::class, 'store'])->name('news.store')->middleware('auth');
+Route::resource('news', NewsController::class)->middleware('auth');

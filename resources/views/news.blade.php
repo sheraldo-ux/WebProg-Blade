@@ -93,7 +93,8 @@
                 <div class="text-sm text-gray-500 mb-4">
                     Posted by {{ $item->user->username }} on {{ $item->created_at->format('F j, Y') }}
                 </div>
-                <div class="prose max-w-none" id="content-{{ $item->id }}">
+                <!-- Tambahkan kelas tambahan untuk memastikan teks tidak keluar -->
+                <div class="prose max-w-none overflow-hidden overflow-wrap break-word word-break break-words" id="content-{{ $item->id }}">
                     {{ $item->content }}
                 </div>
             </article>
@@ -354,6 +355,10 @@
     editor.addEventListener('click', function() {
         editor.focus();
     });
+
+    function formatDoc(command) {
+        document.execCommand(command, false, null);
+    }
 </script>
 
 <style>
@@ -374,6 +379,27 @@
     #editor ol {
         list-style-type: decimal;
         padding-left: 2em;
+    }
+
+    ol {
+        list-style-type: decimal; /* Tampilkan angka */
+        margin-left: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    ul {
+        list-style-type: disc; /* Tampilkan dot */
+        margin-left: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .format-btn {
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+
+    .format-btn:active {
+        background-color: #eee;
     }
 </style>
 @endpush

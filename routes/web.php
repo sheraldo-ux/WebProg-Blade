@@ -25,10 +25,6 @@ Route::get('/tips', function () {
     return view('tips');
 });
 
-Route::get('/about', function () {
-    return view('about');
-});
-
 Route::get('/support', function () {
     return view('support');
 });
@@ -39,11 +35,23 @@ Route::get('/tesloc', function() {
     return view('tesloc');
 });
 
+// Auth Routes
 Route::get('/login', [UserController::class, 'showLogin'])->name('view_login');
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::get('/register', [UserController::class, 'showRegister'])->name('view_register');
 Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
+// Account Routes
+Route::get('/account', function () {
+    return view('account');
+})->name('account')->middleware('auth');
+
+Route::post('/profile/update-photo', [UserController::class, 'updateProfilePhoto'])
+    ->middleware('auth')
+    ->name('updateProfilePhoto');
+
+// News Routes
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::post('/news', [NewsController::class, 'store'])->name('news.store')->middleware('auth');
+Route::resource('news', NewsController::class)->middleware('auth');

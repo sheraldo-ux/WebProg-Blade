@@ -86,6 +86,7 @@
         </div>
     @endauth
 
+    <!-- Add News -->
     <div class="space-y-8">
         @foreach($news as $item)
             <article class="bg-white rounded-lg shadow-md p-6">
@@ -93,12 +94,36 @@
                 <div class="text-sm text-gray-500 mb-4">
                     Posted by {{ $item->user->username }} on {{ $item->created_at->format('F j, Y') }}
                 </div>
-                <div class="prose max-w-none" id="content-{{ $item->id }}">
+                <!-- Tambahkan kelas tambahan untuk memastikan teks tidak keluar -->
+                <div class="prose max-w-none overflow-hidden overflow-wrap break-word word-break break-words" id="content-{{ $item->id }}">
                     {{ $item->content }}
                 </div>
+                @if (auth()->id() === $item->user_id)
+                    <div class="flex space-x-4 mt-4">
+                        <!-- Tombol Edit -->
+                        <form action="{{ route('news.edit', $item->id) }}" method="GET">
+                            @csrf
+                            <button type="submit" class="text-sm text-blue-600 hover:text-blue-500">Edit</button>
+                        </form>
+                        <!-- Tombol Delete -->
+                        <form action="{{ route('news.destroy', $item->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-sm text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this news?')">Delete</button>
+                        </form>
+                    </div>
+                @endif
             </article>
         @endforeach
     </div>
+
+    <!-- Edit -->
+    <form action="{{ isset($editNews) ? route('news.update', $editNews->id) : route('news.store') }}" method="POST">
+        @csrf
+        @if (isset($editNews))
+            @method('PUT') <!-- Untuk method PUT -->
+        @endif
+    </form>
 </div>
 
 
@@ -354,6 +379,70 @@
     editor.addEventListener('click', function() {
         editor.focus();
     });
+
+    function formatDoc(command) {
+        document.execCommand(command, false, null);
+    }
+
+    const editModal = document.getElementById('editModal');
+    const editForm = document.getElementById('editForm');
+    const editTitle = document.getElementById('editTitle');
+    const editContent = document.getElementById('editContent');
+    const titleError = document.getElementById('titleError');
+    const contentError = document.getElementById('contentError');
+
+    function openEditModal(id, title, content) {
+        // Set form action dynamically
+        editForm.action = `/news/${id}`;
+        
+        // Populate the form fields
+        editTitle.value = title;
+        editContent.value = content;
+
+        // Show the modal
+        editModal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        // Hide the modal
+        editModal.classList.add('hidden');
+
+        // Clear error messages
+        titleError.textContent = '';
+        contentError.textContent = '';
+    }
+
+    // Optional: Handle form submission via AJAX
+    editForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent default form submission
+
+        try {
+            const response = await fetch(editForm.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: editTitle.value,
+                    content: editContent.value,
+                    _method: 'PUT',
+                }),
+            });
+
+            if (!response.ok) {
+                const errors = await response.json();
+                titleError.textContent = errors.errors?.title || '';
+                contentError.textContent = errors.errors?.content || '';
+                return;
+            }
+
+            // Success: Reload the page or update the UI dynamically
+            window.location.reload();
+        } catch (err) {
+            console.error('Edit failed:', err);
+        }
+    });
 </script>
 
 <style>
@@ -374,6 +463,27 @@
     #editor ol {
         list-style-type: decimal;
         padding-left: 2em;
+    }
+
+    ol {
+        list-style-type: decimal; /* Tampilkan angka */
+        margin-left: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    ul {
+        list-style-type: disc; /* Tampilkan dot */
+        margin-left: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .format-btn {
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+
+    .format-btn:active {
+        background-color: #eee;
     }
 </style>
 @endpush

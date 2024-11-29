@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
@@ -94,38 +95,108 @@
                 <div class="text-sm text-gray-500 mb-4">
                     Posted by {{ $item->user->username }} on {{ $item->created_at->format('F j, Y') }}
                 </div>
-                <!-- Tambahkan kelas tambahan untuk memastikan teks tidak keluar -->
                 <div class="prose max-w-none overflow-hidden overflow-wrap break-word word-break break-words" id="content-{{ $item->id }}">
-                    {{ $item->content }}
+                    {!! $item->content !!}
                 </div>
                 @if (auth()->id() === $item->user_id)
                     <div class="flex space-x-4 mt-4">
-                        <!-- Tombol Edit -->
-                        <form action="{{ route('news.edit', $item->id) }}" method="GET">
-                            @csrf
-                            <button type="submit" class="text-sm text-blue-600 hover:text-blue-500">Edit</button>
-                        </form>
-                        <!-- Tombol Delete -->
-                        <form action="{{ route('news.destroy', $item->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-sm text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this news?')">Delete</button>
-                        </form>
+                        <button type="button" 
+                            onclick="openEditModal('{{ $item->id }}', '{{ $item->title }}', `{!! $item->content !!}`)" 
+                            class="text-sm text-blue-600 hover:text-blue-500">
+                            Edit
+                        </button>
+                        <button type="button" 
+                            onclick="openDeleteModal('{{ $item->id }}')" 
+                            class="text-sm text-red-600 hover:text-red-500">
+                            Delete
+                        </button>
                     </div>
                 @endif
             </article>
         @endforeach
     </div>
-
-    <!-- Edit -->
-    <form action="{{ isset($editNews) ? route('news.update', $editNews->id) : route('news.store') }}" method="POST">
-        @csrf
-        @if (isset($editNews))
-            @method('PUT') <!-- Untuk method PUT -->
-        @endif
-    </form>
 </div>
 
+<!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center" aria-modal="true">
+    <div class="relative border w-full max-w-3xl shadow-lg rounded-lg bg-white transform">
+        <div class="flex flex-col space-y-6 p-8">
+            <div class="flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-900">Edit News</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Rest of your edit form remains the same -->
+            <form id="editForm" method="POST" class="space-y-6">
+                @csrf
+                @method('PUT')
+                
+                <div>
+                    <label for="editTitle" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" id="editTitle" name="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <span id="titleError" class="text-red-500 text-sm"></span>
+                </div>
+
+                <div>
+                    <label for="editContent" class="block text-sm font-medium text-gray-700">Content</label>
+                    <div class="mt-1">
+                        <div id="editEditor" contenteditable="true" 
+                            class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[150px] p-2"></div>
+                        <input type="hidden" id="editHiddenContent" name="content">
+                    </div>
+                    <span id="contentError" class="text-red-500 text-sm"></span>
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center" aria-modal="true">
+    <div class="relative border w-full max-w-md shadow-lg rounded-lg bg-white transform">
+        <div class="flex flex-col space-y-4 p-6">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-900">Delete News</h3>
+                <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-500">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                    Are you sure you want to delete this news article? This action cannot be undone.
+                </p>
+            </div>
+            <div class="flex justify-end space-x-3 mt-4">
+                <button type="button" onclick="closeDeleteModal()" 
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+                <form id="deleteForm" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @push('scripts')
 <script>
@@ -136,80 +207,150 @@
 
     let consecutiveEnters = 0;
 
-    // Initialize editor
+    function openDeleteModal(id) {
+        const modal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        
+        deleteForm.action = `/news/${id}`;
+        
+        modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+    }
+
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+
+    function openEditModal(id, title, content) {
+        const modal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        const editTitle = document.getElementById('editTitle');
+        const editEditor = document.getElementById('editEditor');
+        const editHiddenContent = document.getElementById('editHiddenContent');
+
+        editForm.action = `/news/${id}`;
+        
+        editTitle.value = title;
+        editEditor.innerHTML = content;
+        editHiddenContent.value = content;
+
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('editModal');
+        const titleError = document.getElementById('titleError');
+        const contentError = document.getElementById('contentError');
+
+        modal.classList.add('hidden');
+
+        titleError.textContent = '';
+        contentError.textContent = '';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const editEditor = document.getElementById('editEditor');
+        const editHiddenContent = document.getElementById('editHiddenContent');
+        editHiddenContent.value = editEditor.innerHTML;
+
+        try {
+            const formData = new FormData(this);
+            const response = await fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                const data = await response.json();
+                if (data.errors) {
+                    document.getElementById('titleError').textContent = data.errors.title?.[0] || '';
+                    document.getElementById('contentError').textContent = data.errors.content?.[0] || '';
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    document.getElementById('editModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
-        // Convert existing posts' content
+
         document.querySelectorAll('[id^="content-"]').forEach(element => {
             element.innerHTML = element.textContent.trim();
         });
 
-        // Handle form submission
         const form = editor.closest('form');
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default submission
-            
-            // Get the content from editor
+            e.preventDefault();
+ 
             const content = editor.innerHTML.trim();
             
-            // Validate content
             if (!content) {
                 alert('Please enter some content');
                 return;
             }
             
-            // Update hidden input with the editor content
             hiddenInput.value = content;
             
-            // Submit the form
             this.submit();
         });
 
-        // Add selection change listener
         document.addEventListener('selectionchange', updateToolbar);
     });
 
-    // Format document - modify to handle list insertion and removal
     function formatDoc(command) {
         if (command === 'insertOrderedList' || command === 'insertUnorderedList') {
             const selection = window.getSelection();
             const range = selection.getRangeAt(0);
             
-            // Get the current block element
             let currentBlock = range.startContainer;
             while (currentBlock && currentBlock.nodeType !== 1) {
                 currentBlock = currentBlock.parentNode;
             }
             
-            // Check if we're already in a list
             const inList = currentBlock && (currentBlock.tagName === 'LI' || currentBlock.closest('li'));
             
             if (inList) {
-                // Get the list item and its content
                 const listItem = currentBlock.tagName === 'LI' ? currentBlock : currentBlock.closest('li');
                 const list = listItem.parentElement;
                 
-                // Create a new paragraph with the list item's content
                 const newParagraph = document.createElement('p');
                 newParagraph.innerHTML = listItem.innerHTML;
                 
-                // Replace the list item with the paragraph
                 if (list.children.length === 1) {
-                    // If it's the only item, replace the whole list
+
                     list.parentNode.replaceChild(newParagraph, list);
                 } else {
                     list.parentNode.insertBefore(newParagraph, list.nextSibling);
                     listItem.remove();
                 }
                 
-                // Set cursor to the new paragraph
                 const newRange = document.createRange();
+
                 newRange.selectNodeContents(newParagraph);
                 newRange.collapse(false);
                 selection.removeAllRanges();
                 selection.addRange(newRange);
             } else {
-                // If we're not in a list, create one
-                // Insert a new paragraph before creating the list if we're not at the start of a block
+
                 if (!isAtStartOfBlock(range)) {
                     document.execCommand('insertParagraph', false, null);
                 }
@@ -223,7 +364,6 @@
         updateToolbar();
     }
 
-    // Function to check if cursor is at start of block
     function isAtStartOfBlock(range) {
         const startContainer = range.startContainer;
         if (startContainer.nodeType === 3) { // Text node
@@ -232,7 +372,6 @@
         return range.startOffset === 0;
     }
 
-    // Update toolbar state
     function updateToolbar() {
         formatButtons.forEach(button => {
             const format = button.dataset.format;
@@ -250,7 +389,6 @@
         });
     }
 
-    // Query current format state
     function queryFormat(format) {
         switch(format) {
             case 'bold':
@@ -268,7 +406,6 @@
         }
     }
 
-    // Modify keyboard event handler for lists
     editor.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             const selection = window.getSelection();
@@ -277,24 +414,23 @@
             const listItem = currentNode.closest('li');
             
             if (listItem) {
-                // If we're in a list item
                 if (listItem.textContent.trim() === '') {
+
                     consecutiveEnters++;
                     
                     if (consecutiveEnters === 2) {
+
                         e.preventDefault();
                         consecutiveEnters = 0;
                         
                         const list = listItem.parentElement;
-                        // Remove the empty list item
+
                         listItem.remove();
                         
-                        // If it was the last item, remove the whole list
                         if (list.children.length === 0) {
                             list.remove();
                         }
                         
-                        // Insert a new paragraph
                         document.execCommand('insertParagraph', false, null);
                         updateToolbar();
                     }
@@ -311,7 +447,7 @@
             const listItem = currentNode.closest('li');
             
             if (listItem) {
-                // If we're at the start of a list item
+
                 if (isAtStartOfBlock(range)) {
                     e.preventDefault();
                     
@@ -320,14 +456,13 @@
                     newParagraph.innerHTML = listItem.innerHTML;
                     
                     if (list.children.length === 1) {
-                        // If it's the only item, replace the whole list
+
                         list.parentNode.replaceChild(newParagraph, list);
                     } else {
-                        // Get the next sibling before removing the list item
+
                         const nextSibling = listItem.nextElementSibling;
                         listItem.remove();
                         
-                        // Insert the new paragraph in the correct position
                         if (nextSibling) {
                             list.insertBefore(newParagraph, nextSibling);
                         } else {
@@ -335,7 +470,6 @@
                         }
                     }
                     
-                    // Set cursor to the new paragraph
                     const newRange = document.createRange();
                     newRange.selectNodeContents(newParagraph);
                     newRange.collapse(false);
@@ -350,7 +484,6 @@
         }
     });
 
-    // Preview functionality
     function togglePreview() {
         const preview = document.getElementById('preview');
         previewMode = !previewMode;
@@ -363,7 +496,6 @@
         }
     }
 
-    // Update preview in real-time
     editor.addEventListener('input', function() {
         if (previewMode) {
             document.getElementById('preview').innerHTML = editor.innerHTML;
@@ -371,77 +503,11 @@
         updateToolbar();
     });
 
-    // When editor gets focus or content changes
     editor.addEventListener('focus', updateToolbar);
     editor.addEventListener('input', updateToolbar);
 
-    // Make sure the editor always has focus where clicked
     editor.addEventListener('click', function() {
         editor.focus();
-    });
-
-    function formatDoc(command) {
-        document.execCommand(command, false, null);
-    }
-
-    const editModal = document.getElementById('editModal');
-    const editForm = document.getElementById('editForm');
-    const editTitle = document.getElementById('editTitle');
-    const editContent = document.getElementById('editContent');
-    const titleError = document.getElementById('titleError');
-    const contentError = document.getElementById('contentError');
-
-    function openEditModal(id, title, content) {
-        // Set form action dynamically
-        editForm.action = `/news/${id}`;
-        
-        // Populate the form fields
-        editTitle.value = title;
-        editContent.value = content;
-
-        // Show the modal
-        editModal.classList.remove('hidden');
-    }
-
-    function closeModal() {
-        // Hide the modal
-        editModal.classList.add('hidden');
-
-        // Clear error messages
-        titleError.textContent = '';
-        contentError.textContent = '';
-    }
-
-    // Optional: Handle form submission via AJAX
-    editForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent default form submission
-
-        try {
-            const response = await fetch(editForm.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title: editTitle.value,
-                    content: editContent.value,
-                    _method: 'PUT',
-                }),
-            });
-
-            if (!response.ok) {
-                const errors = await response.json();
-                titleError.textContent = errors.errors?.title || '';
-                contentError.textContent = errors.errors?.content || '';
-                return;
-            }
-
-            // Success: Reload the page or update the UI dynamically
-            window.location.reload();
-        } catch (err) {
-            console.error('Edit failed:', err);
-        }
     });
 </script>
 
@@ -466,13 +532,13 @@
     }
 
     ol {
-        list-style-type: decimal; /* Tampilkan angka */
+        list-style-type: decimal;
         margin-left: 1.5rem;
         padding-left: 1.5rem;
     }
 
     ul {
-        list-style-type: disc; /* Tampilkan dot */
+        list-style-type: disc;
         margin-left: 1.5rem;
         padding-left: 1.5rem;
     }
@@ -484,6 +550,29 @@
 
     .format-btn:active {
         background-color: #eee;
+    }
+
+    .modal-open {
+        overflow: hidden;
+    }
+
+    #editEditor:empty:before {
+        content: 'Enter your content here...';
+        color: #9CA3AF;
+    }
+
+    #editEditor {
+        min-height: 150px;
+    }
+
+    #editEditor ul {
+        list-style-type: disc;
+        padding-left: 2em;
+    }
+
+    #editEditor ol {
+        list-style-type: decimal;
+        padding-left: 2em;
     }
 </style>
 @endpush

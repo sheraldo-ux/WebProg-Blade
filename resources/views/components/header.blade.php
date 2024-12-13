@@ -45,14 +45,24 @@
 
           <div class="flex items-center">
             @auth
-              <div class="relative">
+              <div class="relative flex items-center space-x-2">
+                
+                <!-- Username with Dropdown -->
                 <button @click="profileOpen = !profileOpen"
-                  class="px-3 py-2 text-sm font-medium text-indigo-100 transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">
+                  class="px-2 py-1 text-sm font-medium text-indigo-100 transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">
                   {{ Auth::user()->username }}
                 </button>
 
+                <!-- Profile Picture -->
+                <img class="h-8 w-8 rounded-full object-cover cursor-pointer" 
+                  src="{{ Auth::user()->profile_picture ?? 'public/profile_photos/default-profile-picture.png' }}" 
+                  alt="dummy.png" />
+          
+                <!-- Dropdown Menu -->
                 <div x-show="profileOpen" @click.away="profileOpen = false"
                   class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <a href="{{ route('account') }}" 
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Account</a>
                   <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"

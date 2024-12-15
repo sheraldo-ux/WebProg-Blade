@@ -16,44 +16,52 @@
 <body class="h-full" style="background-color: #eae8e0">
     <x-header />
     <main>
+        @if(session('success'))
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Success!</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            </div>
+        @endif
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <x-about-page :team="[
                 [
-                    'name' => 'User 1',
+                    'name' => 'Kevin Purnomo',
                     'role' => 'Full Stack Developer',
-                    'image' => 'dummy.png',
+                    'image' => asset('team/kevin.jpg'),
                     'facebook' => '#',
                     'twitter' => '#',
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'User 2',
+                    'name' => 'Pierre Adrian',
                     'role' => 'UX Designer',
-                    'image' => 'dummy.png',
+                    'image' => asset('team/pier.jpg'),
                     'facebook' => '#',
                     'twitter' => '#',
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'User 3',
+                    'name' => 'Timothy Paendong',
                     'role' => 'Backend Developer',
-                    'image' => 'dummy.png',
+                    'image' => asset('team/timot.jpg'),
                     'facebook' => '#',
                     'twitter' => '#',
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'User 4',
+                    'name' => 'Sheraldo Halim',
                     'role' => 'Frontend Developer',
-                    'image' => 'dummy.png',
+                    'image' => asset('team/dodo.jpg'),
                     'facebook' => '#',
                     'twitter' => '#',
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'User 5',
+                    'name' => 'Raphaelle Albetho Wijaya',
                     'role' => 'Project Manager',
-                    'image' => 'dummy.png',
+                    'image' => asset('team/rafa.jpg'),
                     'facebook' => '#',
                     'twitter' => '#',
                     'instagram' => '#',

@@ -10,7 +10,7 @@
       <div class="absolute left-0 flex-shrink-0 lg:static mt-1.5">
         <a href="#" @click="isOpen = !isOpen">
           <span class="sr-only">Your Company</span>
-          <img class="h-12 w-auto cursor-pointer" src="logo.png" alt="Your Company">
+          <img class="h-12 w-auto cursor-pointer" src="{{ asset('logo.png') }}" alt="Your Company">
         </a>
       </div>
 
@@ -23,22 +23,22 @@
         <!-- Navigation -->
         <nav class="flex justify-between items-center w-full mt-1.5">
           <div class="flex space-x-4">
-            <a href="/" @click="activeItem = 'map'; isOpen = false"
+            <a href="{{ route('map') }}" @click="activeItem = 'map'; isOpen = false"
               :class="{ 'text-indigo-400': activeItem === 'map', 'text-indigo-100': activeItem !== 'map' }"
               class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Map</a>
-            <a href="information" @click="activeItem = 'information'; isOpen = false"
+            <a href="{{ route('information') }}" @click="activeItem = 'information'; isOpen = false"
               :class="{ 'text-indigo-400': activeItem === 'information', 'text-indigo-100': activeItem !== 'information' }"
               class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Information</a>
-            <a href="news" @click="activeItem = 'news'; isOpen = false"
+            <a href="{{ route('news.index') }}" @click="activeItem = 'news'; isOpen = false"
               :class="{ 'text-indigo-400': activeItem === 'news', 'text-indigo-100': activeItem !== 'news' }"
               class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">News</a>
-            <a href="tips" @click="activeItem = 'tips'; isOpen = false"
+            <a href="{{ route('tips') }}" @click="activeItem = 'tips'; isOpen = false"
               :class="{ 'text-indigo-400': activeItem === 'tips', 'text-indigo-100': activeItem !== 'tips' }"
               class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Tips</a>
-            <a href="about" @click="activeItem = 'about'; isOpen = false"
+            <a href="{{ route('about') }}" @click="activeItem = 'about'; isOpen = false"
               :class="{ 'text-indigo-400': activeItem === 'about', 'text-indigo-100': activeItem !== 'about' }"
               class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">About</a>
-            <a href="support" @click="activeItem = 'support'; isOpen = false"
+            <a href="{{ route('support') }}" @click="activeItem = 'support'; isOpen = false"
               :class="{ 'text-indigo-400': activeItem === 'support', 'text-indigo-100': activeItem !== 'support' }"
               class="px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">Support</a>
           </div>
@@ -46,7 +46,7 @@
           <div class="flex items-center">
             @auth
               <div class="relative flex items-center space-x-2">
-                
+
                 <!-- Username with Dropdown -->
                 <button @click="profileOpen = !profileOpen"
                   class="px-2 py-1 text-sm font-medium text-indigo-100 transition-all duration-200 hover:bg-white hover:bg-opacity-10 rounded-md">
@@ -54,14 +54,14 @@
                 </button>
 
                 <!-- Profile Picture -->
-                <img class="h-8 w-8 rounded-full object-cover cursor-pointer" 
-                  src="{{ Auth::user()->profile_picture ?? 'public/profile_photos/default-profile-picture.png' }}" 
+                <img class="h-8 w-8 rounded-full object-cover cursor-pointer"
+                  src="{{ Auth::user()->profile_picture ?? asset('profile_photos/default-profile-picture.png') }}"
                   alt="dummy.png" />
-          
+
                 <!-- Dropdown Menu -->
                 <div x-show="profileOpen" @click.away="profileOpen = false"
                   class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <a href="{{ route('account') }}" 
+                  <a href="{{ route('profile.show_profile') }}"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Account</a>
                   <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -124,22 +124,22 @@
             </div>
           </div>
           <nav class="flex flex-col space-y-1 py-2">
-            <a href="/" @click="activeItem = 'map'; isOpen = false"
+            <a href="{{ route('map') }}" @click="activeItem = 'map'; isOpen = false"
               :class="{ 'text-indigo-600': activeItem === 'map', 'text-slate-500': activeItem !== 'map' }"
               class="block px-4 py-2 text-sm font-medium">Map</a>
-            <a href="information" @click="activeItem = 'information'; isOpen = false"
+            <a href="{{ route('information') }}" @click="activeItem = 'information'; isOpen = false"
               :class="{ 'text-indigo-600': activeItem === 'information', 'text-slate-500': activeItem !== 'information' }"
               class="block px-4 py-2 text-sm font-medium">Information</a>
-            <a href="news" @click="activeItem = 'news'; isOpen = false"
+            <a href="{{ route('news.index') }}" @click="activeItem = 'news'; isOpen = false"
               :class="{ 'text-indigo-600': activeItem === 'news', 'text-slate-500': activeItem !== 'news' }"
               class="block px-4 py-2 text-sm font-medium">News</a>
-            <a href="tips" @click="activeItem = 'tips'; isOpen = false"
+            <a href="{{ route('tips') }}" @click="activeItem = 'tips'; isOpen = false"
               :class="{ 'text-indigo-600': activeItem === 'tips', 'text-slate-500': activeItem !== 'tips' }"
               class="block px-4 py-2 text-sm font-medium">Tips</a>
-            <a href="about" @click="activeItem = 'about'; isOpen = false"
+            <a href="{{ route('about') }}" @click="activeItem = 'about'; isOpen = false"
               :class="{ 'text-indigo-600': activeItem === 'about', 'text-slate-500': activeItem !== 'about' }"
               class="block px-4 py-2 text-sm font-medium">About</a>
-            <a href="support" @click="activeItem = 'support'; isOpen = false"
+            <a href="{{ route('support') }}" @click="activeItem = 'support'; isOpen = false"
               :class="{ 'text-indigo-600': activeItem === 'support', 'text-slate-500': activeItem !== 'support' }"
               class="block px-4 py-2 text-sm font-medium">Support</a>
 
@@ -152,13 +152,13 @@
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                   @csrf
-                  <button type="submit" 
+                  <button type="submit"
                     class="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50">
                     Sign Out
                   </button>
                 </form>
               @else
-                <a href="{{ route('view_login') }}" 
+                <a href="{{ route('view_login') }}"
                   class="block px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50">
                   Sign In
                 </a>

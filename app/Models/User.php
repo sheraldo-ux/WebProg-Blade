@@ -19,6 +19,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'role',
         'profile_photo',
     ];
 
@@ -64,5 +65,10 @@ class User extends Authenticatable
     public function news()
     {
         return $this->hasMany(News::class);
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
     }
 }

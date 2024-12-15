@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -58,6 +61,7 @@ class UserController extends Controller
             'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role' => 'contributor',
             'profile_photo' => 'default-profile-picture.png' // Default profile picture
         ]);
 
@@ -75,38 +79,48 @@ class UserController extends Controller
 
     public function showProfile()
     {
-        return view('user.profile', ['user' => Auth::user()]);
+        return view('profile.account', ['user' => Auth::user()]);
     }
 
     public function updateProfilePhoto(Request $request)
     {
-        // Validate file upload
         $request->validate([
-            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image file
+            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = Auth::user();
 
-        // Delete old profile photo if it's not the default
-        if ($user->profile_photo !== 'default-profile-picture.png' && Storage::exists('public/profile_photos/' . $user->profile_photo)) {
-            Storage::delete('public/profile_photos/' . $user->profile_photo);
-        }
+        DB::beginTransaction();
 
-        // Try to save the new profile photo
         try {
-            // Generate unique filename for the uploaded photo
-            $filename = time() . '.' . $request->profile_photo->extension();
-            // Store the file in 'public/profile_photos' directory
-            $request->profile_photo->storeAs('public/profile_photos', $filename);
+            if ($user->profile_photo !== 'default-profile-picture.png') {
+                Storage::disk('public')->delete('profile_photos/' . $user->profile_photo);
+            }
 
-            // Update the user's profile photo in the database
+            $filename = time() . '_' . uniqid() . '.' . $request->profile_photo->extension();
+            
+            $path = $request->file('profile_photo')->storeAs(
+                'profile_photos', 
+                $filename, 
+                'public'  // This ensures the file is stored in the public disk
+            );
+
+            if (!$path) {
+                throw new \Exception('Failed to store the file.');
+            }
+
             $user->profile_photo = $filename;
+            /** @var \App\Models\User $user **/
             $user->save();
 
+            DB::commit();
+
             return back()->with('success', 'Profile photo updated successfully.');
+
         } catch (\Exception $e) {
-            // Handle any exception that occurs during file upload
-            return back()->with('error', 'There was an error updating your profile photo.');
+            DB::rollBack();
+            Log::error('Profile photo update error: ' . $e->getMessage());
+            return back()->with('error', 'There was an error updating your profile photo. Please try again.');
         }
     }
 }

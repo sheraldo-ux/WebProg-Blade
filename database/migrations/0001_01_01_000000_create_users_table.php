@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('username');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('role');
+            $table->string('profile_photo')->default('default-profile-picture.png');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -13,17 +13,11 @@
         :root {
             --navbar-height: 64px;
             --map-top-gap: 36px;
-            --left-popup-top: 120px;
-            --left-popup-fullscreen-top: 20px;
+            --left-popup-top: 130px;
+            --left-popup-fullscreen-top: 30px;
+            --left-popup-width: 300px;
         }
-        @media (max-width: 1024px) {
-            :root {
-                --navbar-height: 56px;
-                --map-top-gap: 8px;
-                --left-popup-top: 70px;
-                --left-popup-fullscreen-top: 15px;
-            }
-        }
+        
         .navbar-hidden {
             transform: translateY(-100%);
         }
@@ -49,8 +43,14 @@
         #leftPopup {
             position: fixed;
             left: 20px;
-            transition: top 0.3s ease-in-out;
+            width: var(--left-popup-width);
+            max-width: 100%;
+            transition: top 0.3s ease-in-out, width 0.3s ease-in-out;
             z-index: 1000;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
     </style>
     <script>
@@ -94,10 +94,6 @@
                 updateLayout();
             }
 
-            // Assuming you have a function or event that opens the popup,
-            // you should call onPopupOpen() when that happens.
-            // For example:
-            // document.querySelector('.open-popup-button').addEventListener('click', onPopupOpen);
         });
     </script>
 </head>

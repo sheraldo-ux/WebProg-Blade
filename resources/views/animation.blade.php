@@ -16,7 +16,7 @@
       function redirectToMap() {
           setTimeout(function() {
               window.location.href = "/map";
-          }, 4000);
+          }, 5000);
       }
       // Call the function when the page loads
       window.onload = redirectToMap;
@@ -37,6 +37,10 @@
             <!-- Instruction Text -->
             <p class="mt-4 text-sm text-slate-500 font-medium">
                 Scroll a bit in map page to hide the navbar
+            </p>
+
+            <p class="mt-4 text-sm text-slate-500 font-medium">
+                It's Recommend to use a desktop browser for better experience
             </p>
         </div>
     </main>

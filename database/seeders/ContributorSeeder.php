@@ -15,7 +15,7 @@ class ContributorSeeder extends Seeder
     public function run(): void
     {
         // create 10 contributors
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             User::create([
                 'username' => fake()->name(),
                 'email' => $email = fake()->unique()->safeEmail(),

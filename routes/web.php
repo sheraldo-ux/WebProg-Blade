@@ -64,18 +64,26 @@ Route::prefix('profile')->name('profile.')->middleware('auth')->group(function (
         Route::put('/{id}/update', [AdminController::class, 'update'])->name('update');
         Route::get('/user-report', [AdminController::class, 'view_user_report'])->name('view_user_report');
         Route::delete('/delete-user/{id}', [AdminController::class, 'delete_user'])->name('delete_user');
+        Route::get('/{id}/update', [AdminController::class, 'view_update_data'])->name('view_update_data');
+        Route::put('/{id}/update', [AdminController::class, 'update_data'])->name('update_data');
     });
-    // Route::prefix('reporter')->name('reporter.')->middleware(['auth', 'role:reporter'])->group(function () {
-    //     Route::get('/', [ReporterController::class, 'index'])->name('index');
-    // });
-    // Route::prefix('contributor')->name('contributor.')->middleware(['auth', 'role:contributor'])->group(function () {
-    //     Route::get('/', [ContributorController::class, 'index'])->name('index');
-    // });
+    Route::prefix('reporter')->name('reporter.')->middleware(['auth', 'role:reporter'])->group(function () {
+        Route::get('/{id}/update', [ReporterController::class, 'view_update'])->name('view_update');
+        Route::put('/{id}/update', [ReporterController::class, 'update'])->name('update');
+    
+
+    });
+    Route::prefix('contributor')->name('contributor.')->middleware(['auth', 'role:contributor'])->group(function () {
+        Route::get('/{id}/update', [ContributorController::class, 'view_update'])->name('view_update');
+        Route::put('/{id}/update', [ContributorController::class, 'update'])->name('update');
+    });
 });
 
 Route::post('/profile/update-photo', [UserController::class, 'updateProfilePhoto'])
     ->middleware('auth')
     ->name('updateProfilePhoto');
+
+
 
 // News Routes
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');

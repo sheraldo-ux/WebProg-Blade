@@ -62,11 +62,11 @@
                 <div x-show="profileOpen" @click.away="profileOpen = false"
                   class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <a href="{{ route('profile.show_profile') }}"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Account</a>
+                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg items-center justify-center">Account</a>
                   <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
-                      class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                      class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg">Logout</button>
                   </form>
                 </div>
               </div>

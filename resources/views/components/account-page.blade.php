@@ -31,9 +31,7 @@
         </div>
       </div>
 
-
-      <div class="mb-6">
-
+      <div class="mb-2">
         <h4 class="text-xl font-semibold mb-4">Change Profile Photo</h4>
         <form action="{{ route('updateProfilePhoto') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
           @csrf
@@ -48,7 +46,6 @@
             @error('profile_photo')
               <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
-
           </div>
           <button type="submit"
             class="w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md">
@@ -57,9 +54,27 @@
         </form>
       </div>
 
+      <div class="mb-2">
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
+          <a href="{{ route('profile.admin.update_data', Auth::user()->id) }}"
+            class="block w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
+            Edit User Data
+          </a>
+        @elseif (Auth::user()->role == 'contributor')
+          <a href="{{ route('profile.contributor.update') }}"
+            class="block w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
+            Edit User Data
+          </a>
+        @elseif (Auth::user()->role == 'reporter')
+          <a href="{{ route('profile.reporter.update', Auth::user()->id) }}"
+            class="block w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
+            Edit User Data
+          </a>
+        @endif
+      </div>
 
       @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
-        <div class="mb-6">
+        <div class="mb-2">
           <a href="{{ route('profile.admin.index') }}"
             class="block w-full py-2 px-4 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
             Admin Dashboard
@@ -67,7 +82,7 @@
         </div>
       @endif
 
-      <div class="mb-6">
+      <div class="mb-2 ">
         <form method="POST" action="{{ route('logout') }}">
           @csrf
           <button type="submit" class="w-full py-2 px-4 bg-red-500 hover:bg-red-700 text-white font-semibold rounded-md">

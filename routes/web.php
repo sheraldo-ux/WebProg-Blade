@@ -35,7 +35,8 @@ Route::get('/support', function () {
     return view('support');
 })->name('support');
 
-Route::get('/flood-locations', [FloodLocationController::class, 'index'])->name('flood_locations');
+Route::get('/flood-locations', [FloodLocationController::class, 'getFloodLocations']);
+Route::get('/city-details', [FloodLocationController::class, 'getCityDetails']);
 
 Route::get('/tesloc', function() {
     return view('tesloc');

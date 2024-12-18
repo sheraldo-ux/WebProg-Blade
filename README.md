@@ -61,13 +61,16 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Dalam menghadapi tantangan perubahan iklim (SDG 13 - Climate Action), Indonesia sering mengalami bencana banjir yang semakin tidak terprediksi pola dan intensitasnya. Aplikasi Web Pemetaan Banjir dikembangkan untuk mengatasi masalah ini dengan menggunakan data historis banjir untuk menganalisis dan memprediksi risiko banjir di lokasi pengguna.
+Aplikasi Web Pemetaan Banjir ini dikembangkan untuk mendukung tujuan SDG 13: Climate Action, yang bertujuan untuk meningkatkan kesadaran dan mengurangi dampak perubahan iklim. Indonesia, sebagai negara yang rawan bencana, sering menghadapi bencana banjir yang semakin tidak terprediksi dalam hal pola dan intensitasnya, terutama di kota-kota besar.
 
-### Tujuan Utama
-* Meningkatkan kesiapsiagaan masyarakat terhadap banjir
-* Menyediakan sistem peringatan dini berbasis data
-* Membantu masyarakat mengambil tindakan preventif
-* Mengurangi potensi kerugian akibat banjir
+Website ini memberikan solusi berbasis data yang memanfaatkan informasi historis banjir untuk memetakan risiko banjir di berbagai lokasi. Dengan adanya prediksi ini, masyarakat dapat lebih siap menghadapi bencana dan mengambil tindakan preventif yang lebih tepat.
+
+Kontribusi Aplikasi terhadap SDG 13:
+
+- Peringatan Dini: Memberikan pemberitahuan kepada pengguna mengenai tingkat risiko banjir di lokasi mereka berdasarkan indeks banjir.
+- Edukasi Masyarakat: Melalui fitur informasi banjir dan tips bertahan hidup, aplikasi ini meningkatkan kesadaran masyarakat tentang mitigasi risiko banjir.
+- Akses Informasi: Pengguna dapat mendapatkan informasi mengenai titik rawan banjir, yang memungkinkan mereka untuk mengambil tindakan preventif lebih awal.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -137,26 +140,47 @@ Pastikan Anda memiliki prasyarat berikut:
 <!-- FEATURES -->
 ## Features
 
-### Halaman Utama (Home Page)
-- Deteksi lokasi dengan koordinat GPS
-- Perhitungan indeks banjir terdekat
-- Prakiraan cuaca 12 jam ke depan
-- Penanda peta risiko banjir
+### Halaman Utama (Home Page):
+- Deteksi Lokasi dengan Koordinat GPS: Pengguna dapat memanfaatkan fitur deteksi lokasi menggunakan GPS untuk mengetahui titik rawan banjir terdekat. Lokasi pengguna akan dipetakan secara otomatis di peta, dan prediksi banjir akan disesuaikan dengan wilayah mereka.
+- Perhitungan Indeks Banjir Terdekat: Aplikasi mengolah data historis untuk menunjukkan tingkat risiko banjir berdasarkan lokasi pengguna. Hal ini membantu pengguna untuk mempersiapkan diri jika banjir diprediksi terjadi.
+- Prakiraan Cuaca 12 Jam ke Depan: Menggunakan data cuaca terkini, aplikasi memberikan prakiraan cuaca untuk membantu pengguna mengantisipasi cuaca ekstrem yang dapat menyebabkan banjir.
+- Penanda Peta Risiko Banjir: Peta interaktif yang menunjukkan titik-titik rawan banjir dengan penanda yang memberikan informasi tentang tingkat bahaya di setiap lokasi.
 
-### Halaman Informasi
-- Dampak banjir
-- Kontak darurat
-- Game Flood Myths and Facts
+### Halaman Informasi:
+- Dampak Banjir: Menyediakan informasi mengenai dampak banjir bagi masyarakat dan lingkungan, termasuk tips untuk mengurangi kerugian akibat banjir.
+- Kontak Darurat: Daftar nomor kontak penting dan pusat bantuan yang bisa dihubungi selama banjir atau bencana alam lainnya.
+Game Flood Myths and Facts: Game edukatif yang mengajarkan masyarakat tentang fakta banjir dan mengurangi miskonsepsi terkait bencana banjir.
 
-### Halaman Berita
-- Form kontribusi berita
-- Tampilan berita terbaru
-- Sistem berbagi informasi banjir real-time
+### Halaman Berita:
+- Form Kontribusi Berita: Pengguna dapat berkontribusi dengan mengirimkan laporan atau berita terkait kejadian banjir di wilayah mereka.
+Tampilan Berita Terbaru: Menampilkan berita terkini mengenai banjir dan keadaan darurat yang bisa membantu masyarakat lebih waspada.
+- Sistem Berbagi Informasi Banjir Real-Time: Pengguna bisa berbagi informasi terbaru mengenai banjir melalui platform ini, membantu penyebaran informasi lebih cepat.
 
-### Halaman Tips
-- SMART Tips for Flood Survival
-- Studi kasus nyata
-- Video edukasi
+### Halaman Tips:
+- SMART Tips for Flood Survival: Tips bertahan hidup yang berbasis pada prinsip SMART (Stay Informed, Move to Higher Ground, Assemble an Emergency Kit, Respond Immediately, & Turn Off Utilities) untuk membantu masyarakat bertindak secara efektif selama banjir.
+Studi Kasus Nyata: Contoh-contoh kejadian banjir nyata dan cara mitigasi yang efektif yang diterapkan di lokasi-lokasi terdampak.
+- Video Edukasi: Menyediakan video pendek yang memberikan penjelasan tentang cara bertahan hidup saat banjir, mengurangi kerusakan, dan meminimalisir risiko.
+
+### Halaman About
+- Meet Our Team, Bagian ini menampilkan profil anggota tim yang terlibat dalam pengembangan aplikasi, yang mencakup informasi berikut:
+Foto Profil: Gambar anggota tim yang jelas dan profesional.
+Nama/User: Nama lengkap atau username anggota tim.
+Posisi/Role: Posisi atau peran anggota dalam proyek.
+Tautan Media Sosial: Link ke akun media sosial masing-masing anggota untuk memberikan kesempatan kepada pengguna untuk terhubung lebih lanjut dengan tim.
+
+### Halaman Support Us 
+
+Mengajak pengguna untuk berpartisipasi dalam inisiatif pemetaan banjir dan memberikan dukungan untuk meningkatkan dampak aplikasi.
+Flood Mapping Initiative
+Bagian ini memiliki dua fitur utama untuk melibatkan pengguna dalam pemetaan banjir:
+- Report Flood Incidents: Fitur ini memungkinkan pengguna untuk melaporkan kejadian banjir di daerah mereka, yang akan membantu memperbarui data dan meningkatkan akurasi peta risiko banjir.
+- Spread the Word: Fitur ini memungkinkan pengguna untuk membagikan aplikasi ke komunitas atau teman-teman mereka untuk meningkatkan kesadaran tentang risiko banjir dan pentingnya kesiapsiagaan.
+
+Collective Impact Statistics
+Tampilan ini menunjukkan statistik dampak kolektif dari dukungan pengguna, termasuk:
+- Jumlah Laporan Banjir yang Diterima: Menunjukkan jumlah laporan banjir yang berhasil dikumpulkan dari pengguna.
+- Jumlah Aplikasi yang Dibagikan: Menampilkan jumlah aplikasi yang telah dibagikan oleh pengguna ke komunitas mereka.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -181,22 +205,22 @@ Lihat [open issues](https://github.com/sheraldo-ux/WebProg-Blade/issues) untuk d
 <!-- TEAM -->
 ## Team
 
-### Anggota Tim Pengembang
-
-- **Pierre Adrian Tiopan Octavianus Sitoros**
-  [![GitHub][github-shield]](https://github.com/PierreKoding)
+### Anggota Tim Pengembang & Kontribusi
 
 - **Sheraldo Halim**
-  [![GitHub][github-shield]](https://github.com/sheraldo-ux)
+  [![GitHub][github-shield]](https://github.com/sheraldo-ux) | FrontEnd
 
 - **Raphaelle Albetho Wijaya**
-  [![GitHub][github-shield]](https://github.com/Zweych)
+  [![GitHub][github-shield]](https://github.com/Zweych) | FrontEnd
+
+- **Pierre Adrian Tiopan Octavianus Sitorus**
+  [![GitHub][github-shield]](https://github.com/PierreKoding) | FrontEnd
 
 - **Timothy Paendong**
-  [![GitHub][github-shield]](https://github.com/voidt01)
+  [![GitHub][github-shield]](https://github.com/voidt01) | BackEnd
 
 - **Kevin Purnomo**
-  [![GitHub][github-shield]](https://github.com/D9theCoder)
+  [![GitHub][github-shield]](https://github.com/D9theCoder) | FullStack
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 
 class FloodLocation extends Model
 {
@@ -20,5 +21,9 @@ class FloodLocation extends Model
 
     public function cityDetails(){
         return $this->hasMany(CityDetail::class, 'flood_location_id');
+    }
+
+    public function reports(){
+        return $this->hasMany(Report::class, 'flood_location_id');
     }
 }

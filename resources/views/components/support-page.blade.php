@@ -25,7 +25,7 @@
       </div>
 
       <!-- Impact Tracker -->
-      <div class="mt-12 bg-gray-50 p-6 rounded-lg shadow-md">
+      {{-- <div class="mt-12 bg-gray-50 p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Our Collective Impact</h2>
         <div class="grid grid-cols-2 gap-4">
           <div class="text-center">
@@ -37,7 +37,7 @@
             <p class="text-sm text-gray-600">Times App Shared</p>
           </div>
         </div>
-      </div>
+      </div> --}}
 
       <!-- Support Explanation -->
       <div class="mt-12">
@@ -59,9 +59,11 @@
       <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-8 rounded-lg max-w-md w-full">
           <h3 class="text-xl font-semibold mb-4">Report a Flood Incident</h3>
-          <form id="report-form" class="space-y-4">
-            <input type="text" placeholder="Location" class="w-full p-2 border rounded" required>
-            <textarea placeholder="Description" class="w-full p-2 border rounded" required></textarea>
+          <form id="report-form" class="space-y-4" method="POST" action="/submitReport">
+            @csrf
+            <input type="text" name="city_name" placeholder="Administrative Cities (e.g., Jakarta Barat)" class="w-full p-2 border rounded" required>
+            <input type="text" name="subdistrict" placeholder="Subdistricts (e.g., Tegal Alur)" class="w-full p-2 bbroder rounded" required>
+            <textarea name="description" placeholder="Description" class="w-full p-2 border rounded" required></textarea>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
               Submit Report
             </button>
@@ -100,25 +102,25 @@ function hideModal(id) {
     document.getElementById(id).classList.add('hidden');
 }
 
-function shareApp(platform) {
-    // Kalo backend bakal ribet bisa di delete ini sama semua function counter nya bg
-    shareCount++;
-    updateCounts();
-    hideModal('share-modal');
-}
+// function shareApp(platform) {
+//     // Kalo backend bakal ribet bisa di delete ini sama semua function counter nya bg
+//     shareCount++;
+//     updateCounts();
+//     hideModal('share-modal');
+// }
 
 document.getElementById('report-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    reportCount++;
-    updateCounts();
+    //reportCount++;
+    //updateCounts();
     hideModal('report-modal');
-    this.reset();
+    this.submit();
 });
 
-function updateCounts() {
-    document.getElementById('report-count').textContent = reportCount;
-    document.getElementById('share-count').textContent = shareCount;
-}
+// function updateCounts() {
+//     document.getElementById('report-count').textContent = reportCount;
+//     document.getElementById('share-count').textContent = shareCount;
+// }
 
-updateCounts();
+// updateCounts();
 </script>

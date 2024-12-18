@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FloodLocationController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\User\AdminController;
 use App\Http\Controllers\User\ContributorController;
 use App\Http\Controllers\User\ReporterController;
@@ -35,8 +36,12 @@ Route::get('/support', function () {
     return view('support');
 })->name('support');
 
+// fetch flood data to map
 Route::get('/flood-locations', [FloodLocationController::class, 'getFloodLocations']);
 Route::get('/city-details', [FloodLocationController::class, 'getCityDetails']);
+
+// submit report 
+Route::post('/submitReport', [ReportController::class, 'store']);
 
 Route::get('/tesloc', function() {
     return view('tesloc');

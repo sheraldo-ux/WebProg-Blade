@@ -6,7 +6,8 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class information-page extends Component
+// Ignore the error in the next line
+class InformationPage extends Component
 {
     /**
      * Create a new component instance.

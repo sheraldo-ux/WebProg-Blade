@@ -203,7 +203,7 @@ Lihat [open issues](https://github.com/sheraldo-ux/WebProg-Blade/issues) untuk d
 <!-- LICENSE -->
 ## License
 
-Didistribusikan di bawah Lisensi MIT. Lihat `LICENSE.txt` untuk informasi lebih lanjut.
+Didistribusikan di bawah Lisensi MIT. Lihat `LICENSE` untuk informasi lebih lanjut.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -26,15 +26,12 @@ class AdminController extends Controller
         }
 
         // Pagination Rule
-        if ($perPage == 'all') 
-        {
+        if ($perPage == 'all') {
             $users = $users->get();
-        } 
-        else 
-        {
+        } else {
             $users = $users->paginate($perPage);
         }
-        
+
         return view('profile.admin.index', compact('users'));
     }
 
@@ -42,7 +39,7 @@ class AdminController extends Controller
     {
         return view('profile.admin.form');
     }
-    
+
     public function create(Request $request)
     {
         $data = $request->validate([
@@ -113,7 +110,7 @@ class AdminController extends Controller
             ->leftJoin('users', 'feedback.user_id', '=', 'users.id')
             ->orderBy('created_at', 'desc')
             ->paginate(15);
-        
+
         return view('profile.admin.feedback', compact('feedback'));
     }
 
@@ -121,7 +118,7 @@ class AdminController extends Controller
     {
         return view('profile.admin.user_report');
     }
-
+    
     public function delete_user($id)
     {
         $user = User::findOrFail($id);
@@ -136,7 +133,62 @@ class AdminController extends Controller
             return redirect()->route('profile.admin.index')->with('error', 'You cannot delete your own account.');
         }
 
+        // Prevent admin from deleting other admin or superadmin
+        if (Auth::user()->role === 'admin' && ($user->role === 'admin' || $user->role === 'superadmin')) {
+            return redirect()->route('profile.admin.index')->with('error', 'You cannot delete another admin or superadmin.');
+        }
+
         $user->delete();
         return redirect()->route('profile.admin.index')->with('success', 'User deleted successfully');
+    }
+
+    public function view_update_self(string $id)
+    {
+        $user = User::findOrFail($id);
+
+        if (!$user) {
+            abort(404, 'User not found!');
+            return;
+        }
+
+        return view('profile.admin.update_self', compact('user'));
+    }
+
+    public function update_self(Request $request, String $id)
+    {
+        $user = User::findOrFail($id);
+
+        $data = $request->validate([
+            'username' => 'required|string|min:3|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => [
+                'nullable',
+                'min:6',
+                'confirmed',
+                'regex:/^(?=.*[A-Z])(?=.*[0-9])/',
+            ]
+        ], [
+            'username.required' => 'The name field is required.',
+            'username.min' => 'The name must be at least 3 characters.',
+            'username.max' => 'The name may not be greater than 255 characters.',
+            'username.unique' => 'The username has already been taken.',
+            'email.required' => 'The email field is required.',
+            'email.email' => 'Email format is invalid.',
+            'email.unique' => 'Email already exists.',
+            'password.regex' => 'The password must contain at least one capital letter and one number.',
+        ]);
+
+        // Check if password is provided, if not, use the old password
+        if (!empty($data['password'])) {
+            $user->password = bcrypt($data['password']);
+        }
+
+        $user->update([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => $user->password
+        ]);
+
+        return redirect()->route('profile.show_profile')->with('success', 'User updated successfully');
     }
 }

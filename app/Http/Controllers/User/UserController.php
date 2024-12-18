@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
@@ -62,7 +63,7 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => 'contributor',
-            'profile_photo' => 'default-profile-picture.png' // Default profile picture
+            'profile_photo' => null // Set to null instead of default filename
         ]);
 
         Auth::login($user);
@@ -93,7 +94,7 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            if ($user->profile_photo !== 'default-profile-picture.png') {
+            if ($user->profile_photo) { // Only delete if there's an existing custom photo
                 Storage::disk('public')->delete('profile_photos/' . $user->profile_photo);
             }
 
@@ -102,7 +103,7 @@ class UserController extends Controller
             $path = $request->file('profile_photo')->storeAs(
                 'profile_photos', 
                 $filename, 
-                'public'  // This ensures the file is stored in the public disk
+                'public'
             );
 
             if (!$path) {
@@ -121,6 +122,88 @@ class UserController extends Controller
             DB::rollBack();
             Log::error('Profile photo update error: ' . $e->getMessage());
             return back()->with('error', 'There was an error updating your profile photo. Please try again.');
+        }
+    }
+
+    public function resetProfilePhoto()
+    {
+        $user = Auth::user();
+
+        DB::beginTransaction();
+
+        try {
+            if ($user->profile_photo) {
+                Storage::disk('public')->delete('profile_photos/' . $user->profile_photo);
+            }
+
+            $user->profile_photo = null;
+            /** @var \App\Models\User $user **/
+            $user->save();
+
+            DB::commit();
+
+            return back()->with('success', 'Profile photo reset to default.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Profile photo reset error: ' . $e->getMessage());
+            return back()->with('error', 'There was an error resetting your profile photo. Please try again.');
+        }
+    }
+
+    public function showResetForm()
+    {
+        return view('auth.forget_password');
+    }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return redirect()->back()->with('success', true);
+        } else {
+            return redirect()->back()->withErrors(['email' => __($status)]);
+        }
+    }
+
+    public function showResetPasswordForm($token)
+    {
+        return view('auth.reset_password', ['token' => $token, 'email' => request()->email]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => [
+                'required',
+                'min:6',
+                'confirmed',
+                'regex:/^(?=.*[A-Z])(?=.*[0-9])/',
+            ],
+        ], [
+            'password.regex' => 'The password must contain at least one capital letter and one number.',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                ])->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', 'Your password has been successfully reset. You can now log in with your new password.');
+        } else {
+            return back()->withErrors(['email' => [__($status)]]);
         }
     }
 }

@@ -1,7 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import defaultTheme from "tailwindcss/defaultTheme";
-import forms from "@tailwindcss/forms"; 
-import lineClamp from "@tailwindcss/line-clamp";
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 export default {
     content: [
@@ -15,12 +13,12 @@ export default {
                 sans: ["Inter var", ...defaultTheme.fontFamily.sans],
             },
             height: {
-                '50dvh': '50dvh', // Add custom height utility for 50dvh
+                '50dvh': '50dvh', // Add custom height utility for 80dvh
             },
         },
     },
     plugins: [
-        forms,
-        lineClamp,
+        require("@tailwindcss/forms"),
+        require('@tailwindcss/line-clamp'),
     ],
 };

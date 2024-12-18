@@ -55,7 +55,7 @@
 
                 <!-- Profile Picture -->
                 <img class="h-8 w-8 rounded-full object-cover cursor-pointer"
-                  src="{{ Auth::user()->profile_picture ?? asset('profile_photos/default-profile-picture.png') }}"
+                  src="{{ Auth::user()->profile_photo ? asset('storage/profile_photos/' . Auth::user()->profile_photo) : asset('profile_photos/default-profile-picture.png') }}"
                   alt="dummy.png" />
 
                 <!-- Dropdown Menu -->

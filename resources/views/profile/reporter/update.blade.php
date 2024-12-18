@@ -16,11 +16,6 @@
 
 <body class="h-full" style="background-color: #eae8e0">
   <x-header />
-  <nav class="bg-gray-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <x-admin-sub-navbar/>
-    </div>
-  </nav>
   <main class="pb-8 max-lg:pt-4">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
       <div class="bg-white p-6 rounded-lg shadow ">

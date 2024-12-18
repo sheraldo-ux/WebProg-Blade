@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class admin-sub-navbar extends Component
+class AdminSubNavbar extends Component
 {
     /**
      * Create a new component instance.

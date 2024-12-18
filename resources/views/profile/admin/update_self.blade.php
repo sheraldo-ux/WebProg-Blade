@@ -16,18 +16,14 @@
 
 <body class="h-full" style="background-color: #eae8e0">
   <x-header />
-  <nav class="bg-gray-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <x-admin-sub-navbar/>
-    </div>
-  </nav>
   <main class="pb-8 max-lg:pt-4">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
       <div class="bg-white p-6 rounded-lg shadow ">
         <header class="bg-white w-full text-2xl font-semibold border-b border-neutral-300 px-6 py-4">
           Update User
         </header>
-        <form class="px-6 py-4 text-sm flex flex-col w-full gap-y-6 mt-2" action="{{ route('profile.admin.update_data', $user->id) }}" method="POST">
+        <form class="px-6 py-4 text-sm flex flex-col w-full gap-y-6 mt-2"
+          action="{{ route('profile.admin.update_self', $user->id) }}" method="POST">
           @csrf
           @method('PUT')
           <div class="w-full flex flex-row gap-x-4">
@@ -56,7 +52,7 @@
               @enderror
             </div>
           </div>
-          {{-- Password --}}
+          
           <div class="w-full flex flex-row gap-x-4">
             <div class="w-full">
               <label class="font-medium">Password</label>
@@ -70,7 +66,7 @@
               @enderror
             </div>
           </div>
-          {{-- Confirm Password --}}
+          
           <div class="w-full flex flex-row gap-x-4">
             <div class="w-full">
               <label class="font-medium">Confirm Password</label>

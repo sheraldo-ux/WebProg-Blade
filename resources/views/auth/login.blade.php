@@ -29,6 +29,12 @@
         </p>
       </div>
 
+      @if (session('status'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+          <span class="block sm:inline">{{ session('status') }}</span>
+        </div>
+      @endif
+
       <form class="mt-8 space-y-6" action="{{ route('login') }}" method="POST">
         @csrf
         <div class="space-y-1">
@@ -62,6 +68,11 @@
               <label for="remember_me" class="ml-2 block text-sm text-gray-700">
                 Remember me
               </label>
+            </div>
+            <div class="text-sm">
+              <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                Forgot your password?
+              </a>
             </div>
           </div>
         </div>

@@ -9,9 +9,15 @@ use Illuminate\Http\Request;
 class ContributorController extends Controller
 {
     //
-    public function view_update()
+    public function view_update($id)
     {
-        return view('profile.contributor.update');
+        $user = User::findOrFail($id);
+
+        if (!$user) {
+            abort(404, 'User not found!');
+            return;
+        }
+        return view('profile.contributor.update', compact('user'));
     }
 
     public function update(Request $request, String $id)
@@ -19,8 +25,8 @@ class ContributorController extends Controller
         $user = User::findOrFail($id);
 
         $data = $request->validate([
-            'username' => 'required|string|min:3|max:255|unique:users',
-            'email' => 'required|email|unique:users',
+            'username' => 'required|string|min:3|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password'=> [
                 'nullable',
                 'min:6',
@@ -37,19 +43,18 @@ class ContributorController extends Controller
             'email.unique' => 'Email already exists.',
             'password.regex' => 'The password must contain at least one capital letter and one number.',
         ]);
-
-        // Mengecek apakah email berubah, jika berubah maka password direset sesuai dengan email baru
+    
         // Check if password is provided, if not, use the old password
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);
         }
-
+    
         $user->update([
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => $user->password
         ]);
-
+    
         return redirect()->route('profile.show_profile')->with('success', 'User updated successfully');
     }
 }

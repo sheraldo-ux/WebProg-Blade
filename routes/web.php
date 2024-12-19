@@ -33,6 +33,7 @@ Route::get('/tips', function () {
 })->name('tips');
 
 Route::get('/support', [ReportController::class, 'index'])->name('support');
+// Route::resource('support', ReportController::class)->middleware('auth');
 
 Route::get('/flood-locations', [FloodLocationController::class, 'index'])->name('flood_locations');
 

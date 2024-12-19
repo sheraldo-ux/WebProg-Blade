@@ -424,7 +424,7 @@
         popupContent.innerHTML = `
             <p><i class="fas fa-map-marker-alt"></i> Coordinates: ${userCoords[1].toFixed(4)}, ${userCoords[0].toFixed(4)}</p>
             <p><i class="fas fa-tint"></i> Nearest Flood Index: ${nearest.indeksBanjir}</p>
-            <p><i class="fas fa-exclamation-triangle"></i> Category: ${nearest.Kategori}</p>
+            <p><i class="fas fa-exclamation-triangle"></i> Category: ${nearest.kategori}</p>
             <p><i class="fas fa-info-circle"></i> Nearest Location: ${nearest.kelurahan}</p>
         `;
         leftPopup.style.display = 'block';
@@ -546,7 +546,7 @@
         cityDetailsPopup.innerHTML = `
                     <strong>Kelurahan : ${detail.kelurahan}</strong>
                     <p><i class="fas fa-tint"></i> Indeks Banjir: ${detail.indeksBanjir}</p>
-                    <p><i class="fas fa-exclamation-triangle"></i> Kategori: ${detail.Kategori}</p>
+                    <p><i class="fas fa-exclamation-triangle"></i> Kategori: ${detail.kategori}</p>
                 `;
         cityDetailsPopup.style.display = 'block';
         weatherPopup.style.display = 'none';
@@ -681,7 +681,7 @@
       popupContent.innerHTML = `
                 <p><i class="fas fa-map-marker-alt"></i> Coordinates: ${userCoords[1].toFixed(4)}, ${userCoords[0].toFixed(4)}</p>
                 <p><i class="fas fa-tint"></i> Nearest Flood Index: ${nearest.indeksBanjir}</p>
-                <p><i class="fas fa-exclamation-triangle"></i> Category: ${nearest.Kategori}</p>
+                <p><i class="fas fa-exclamation-triangle"></i> Category: ${nearest.kategori}</p>
                 <p><i class="fas fa-info-circle"></i> Nearest Location: ${nearest.kelurahan}</p>
             `;
       leftPopup.style.display = 'block';

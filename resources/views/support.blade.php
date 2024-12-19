@@ -31,8 +31,16 @@
               </div>
             @endif
 
-            {{-- If role is Contributor --}}
-            @if (Auth::user()->role == 'contributor')
+            {{-- If the user is not authenticated --}}
+            @if (!Auth::check())
+            <div class="grid md:grid-cols-2 gap-8">
+              <!-- Report Flood -->
+              <div class="bg-blue-50 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+                <h2 class="text-xl font-semibold text-blue-700 mb-4">Report Flood Incidents</h2>
+                <p class="text-gray-600 mb-4">Your local insights are crucial. Help us keep our map accurate and
+                  up-to-date.</p>
+              </div>
+            @elseif (Auth::user()->role == 'contributor')
               <div class="grid md:grid-cols-2 gap-8">
                 <!-- Report Flood -->
                 <div class="bg-blue-50 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">

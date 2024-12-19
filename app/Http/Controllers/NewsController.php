@@ -10,7 +10,7 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $news = News::latest()->paginate(3);
+        $news = News::latest()->paginate(5);
         return view('news', compact('news'));
     }
 
@@ -19,6 +19,12 @@ class NewsController extends Controller
         $validated = $request->validate([
             'title' => 'required|min:5|max:255',
             'content' => 'required|min:10'
+        ], [
+            'title.required' => 'Title is required',
+            'title.min' => 'Title must be at least 5 characters',
+            'title.max' => 'Title cannot exceed 255 characters',
+            'content.required' => 'Content is required',
+            'content.min' => 'Content must be at least 10 characters'
         ]);
 
         News::create([
@@ -54,6 +60,12 @@ class NewsController extends Controller
         $request->validate([
             'title' => 'required|min:5|max:255',
             'content' => 'required|min:10',
+        ], [
+            'title.required' => 'Title is required',
+            'title.min' => 'Title must be at least 5 characters',
+            'title.max' => 'Title cannot exceed 255 characters',
+            'content.required' => 'Content is required',
+            'content.min' => 'Content must be at least 10 characters'
         ]);
 
         $news->update([

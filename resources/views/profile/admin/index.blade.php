@@ -22,6 +22,7 @@
     </div>
   </nav>
   <main class="pb-8 max-lg:pt-4">
+    
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
       <div class="bg-white p-6 rounded-lg shadow">
         @if (session('success'))
@@ -37,8 +38,21 @@
             <span class="block sm:inline">{{ session('error') }}</span>
           </div>
         @endif
+        
         @if ($users->count() > 0)
           <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">User List</h2>
+          <div class="mt-4 mb-6">
+            <div class="relative">
+              <input type="text" id="searchInput" 
+                class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                placeholder="Search users">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </div>
           <div class="overflow-x-auto mt-6 w-full">
             <form method="GET" action="{{ route('profile.admin.index') }}"
               class="mb-4 flex justify-between items-center">
@@ -107,7 +121,7 @@
                   Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} results
                 </div>
                 <div>
-                  {{ $users->appends(['perPage' => request('perPage'), 'sortBy' => request('sortBy'), 'sortOrder' => request('sortOrder')])->links() }}
+                  {{ $users->appends(['perPage' => request('perPage'), 'sortBy' => request('sortBy'), 'sortOrder' => request('sortOrder')])->onEachSide(1)->links('pagination::simple-tailwind') }}
                 </div>
                 <div>
                   <form method="GET" action="{{ route('profile.admin.index') }}">
@@ -136,7 +150,20 @@
         @endif
       </div>
     </div>
+
   </main>
+  <script>
+    // Simple search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+      let filter = this.value.toLowerCase();
+      let rows = document.querySelectorAll('tbody tr');
+
+      rows.forEach(row => {
+        let text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+  </script>
 </body>
 
 </html>

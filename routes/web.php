@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FloodLocationController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\User\AdminController;
 use App\Http\Controllers\User\ContributorController;
 use App\Http\Controllers\User\ReporterController;
@@ -31,15 +32,19 @@ Route::get('/tips', function () {
     return view('tips');
 })->name('tips');
 
-Route::get('/support', function () {
-    return view('support');
-})->name('support');
+Route::get('/support', [ReportController::class, 'index'])->name('support');
 
 Route::get('/flood-locations', [FloodLocationController::class, 'index'])->name('flood_locations');
 
-Route::get('/tesloc', function() {
-    return view('tesloc');
-})->name('tesloc');
+// fetch flood data to map
+Route::post('/submitReport', [ReportController::class, 'store_report']);
+Route::post('/submitFloodPoint', [ReportController::class, 'store_flood_point']);
+Route::get('/api/flood-locations', [FloodLocationController::class, 'getFloodLocations']);
+Route::get('/api/city-details', [FloodLocationController::class, 'getCityDetails']);
+
+// Route::get('/tesloc', function() {
+//     return view('tesloc');
+// })->name('tesloc');
 
 // Auth Routes
 Route::get('/login', [UserController::class, 'showLogin'])->name('view_login');
@@ -105,4 +110,5 @@ Route::get('/profile/reset-photo', [UserController::class, 'resetProfilePhoto'])
 // News Routes
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::post('/news', [NewsController::class, 'store'])->name('news.store')->middleware('auth');
-Route::resource('news', NewsController::class)->middleware('auth');
+// Route::resource('news', NewsController::class)->middleware('auth');
+

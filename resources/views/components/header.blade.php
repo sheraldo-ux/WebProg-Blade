@@ -148,7 +148,9 @@
               @auth
                 <div class="px-4 py-2">
                   <p class="text-sm font-medium text-gray-600">Signed in as:</p>
-                  <p class="text-sm font-medium text-gray-900">{{ Auth::user()->username }}</p>
+                  <a href="{{ route('profile.show_profile') }}">
+                    <p class="text-sm font-medium text-indigo-600 hover:text-indigo-800">{{ Auth::user()->username }}</p>
+                  </a>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                   @csrf

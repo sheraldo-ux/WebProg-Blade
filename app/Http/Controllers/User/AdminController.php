@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +61,8 @@ class AdminController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'role' => $data['role'],
-            'password' => bcrypt($data['email'])
+            'password' => bcrypt($data['email']),
+            'profile_photo' => null
         ]);
 
         return redirect()->route('profile.admin.index')->with('success', 'User created successfully');
@@ -116,7 +118,9 @@ class AdminController extends Controller
 
     public function view_user_report()
     {
-        return view('profile.admin.user_report');
+        $reports = Report::paginate(10);
+
+        return view('profile.admin.user_report', compact('reports'));
     }
     
     public function delete_user($id)

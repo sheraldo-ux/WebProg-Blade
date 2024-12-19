@@ -55,18 +55,18 @@
 
                 <!-- Profile Picture -->
                 <img class="h-8 w-8 rounded-full object-cover cursor-pointer"
-                  src="{{ Auth::user()->profile_picture ?? asset('profile_photos/default-profile-picture.png') }}"
+                  src="{{ Auth::user()->profile_photo ? asset('storage/profile_photos/' . Auth::user()->profile_photo) : asset('profile_photos/default-profile-picture.png') }}"
                   alt="dummy.png" />
 
                 <!-- Dropdown Menu -->
                 <div x-show="profileOpen" @click.away="profileOpen = false"
                   class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <a href="{{ route('profile.show_profile') }}"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Account</a>
+                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg items-center justify-center">Account</a>
                   <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
-                      class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                      class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg">Logout</button>
                   </form>
                 </div>
               </div>
@@ -148,7 +148,9 @@
               @auth
                 <div class="px-4 py-2">
                   <p class="text-sm font-medium text-gray-600">Signed in as:</p>
-                  <p class="text-sm font-medium text-gray-900">{{ Auth::user()->username }}</p>
+                  <a href="{{ route('profile.show_profile') }}">
+                    <p class="text-sm font-medium text-indigo-600 hover:text-indigo-800">{{ Auth::user()->username }}</p>
+                  </a>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                   @csrf

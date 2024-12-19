@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             FloodLocationsTableSeeder::class,
-            SuperAdminSeeder::class
+            SuperAdminSeeder::class,
+            ContributorSeeder::class
         ]);
     }
 }

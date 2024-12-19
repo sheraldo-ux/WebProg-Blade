@@ -61,7 +61,12 @@
           <h3 class="text-xl font-semibold mb-4">Report a Flood Incident</h3>
           <form id="report-form" class="space-y-4" method="POST" action="/submitReport">
             @csrf
-            <input type="text" name="city_name" placeholder="Administrative Cities (e.g., Jakarta Barat)" class="w-full p-2 border rounded" required>
+            <select name="city_name" class="w-full p-2 border rounded" required>
+                <option value="" disabled selected>Select Administrative City</option>
+                @foreach($floodLocations as $location)
+                    <option value="{{ $location->name }}">{{ $location->name }}</option>
+                @endforeach
+            </select>
             <input type="text" name="subdistrict" placeholder="Subdistricts (e.g., Tegal Alur)" class="w-full p-2 bbroder rounded" required>
             <textarea name="description" placeholder="Description" class="w-full p-2 border rounded" required></textarea>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">

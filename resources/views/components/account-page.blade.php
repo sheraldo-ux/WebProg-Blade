@@ -18,8 +18,9 @@
       <div class="flex justify-center items-center space-x-4 mb-8">
         <div class="relative w-44 h-44 bg-white p-4 rounded-full shadow-md transition-all duration-400 group">
           <div class="relative w-full h-full">
-            <img src="{{ asset('storage/profile_photos/' . Auth::user()->profile_photo) }}" alt="Profile Photo"
-              class="w-full h-90% object-cover rounded-full transition-all duration-400 group-hover:rounded-lg group-hover:-translate-y-10">
+            <img src="{{ Auth::user()->profile_photo ? asset('storage/profile_photos/' . Auth::user()->profile_photo) : asset('profile_photos/default-profile-picture.png') }}" 
+                 alt="Profile Photo"
+                 class="w-full h-90% object-cover rounded-full transition-all duration-400">
           </div>
         </div>
       </div>
@@ -31,9 +32,7 @@
         </div>
       </div>
 
-
-      <div class="mb-6">
-
+      <div class="mb-2">
         <h4 class="text-xl font-semibold mb-4">Change Profile Photo</h4>
         <form action="{{ route('updateProfilePhoto') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
           @csrf
@@ -48,18 +47,41 @@
             @error('profile_photo')
               <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
-
           </div>
-          <button type="submit"
-            class="w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md">
-            Update Photo
-          </button>
+          <div class="flex gap-2">
+            <button type="submit"
+              class="flex-1 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md">
+              Update Photo
+            </button>
+            <a href="{{ route('resetProfilePhoto') }}"
+              class="flex-1 py-2 px-4 bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-md text-center">
+              Reset to Default
+            </a>
+          </div>
         </form>
       </div>
 
+      <div class="mb-2">
+        @if (Auth::user()->role == 'admin')
+          <a href="{{ route('profile.admin.view_update_self', Auth::user()->id) }}"
+            class="block w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
+            Edit User Data
+          </a>
+        @elseif (Auth::user()->role == 'contributor')
+          <a href="{{ route('profile.contributor.view_update', Auth::user()->id) }}"
+            class="block w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
+            Edit User Data
+          </a>
+        @elseif (Auth::user()->role == 'reporter')
+          <a href="{{ route('profile.reporter.view_update', Auth::user()->id) }}"
+            class="block w-full py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
+            Edit User Data
+          </a>
+        @endif
+      </div>
 
       @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
-        <div class="mb-6">
+        <div class="mb-2">
           <a href="{{ route('profile.admin.index') }}"
             class="block w-full py-2 px-4 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md text-center transition duration-150 ease-in-out">
             Admin Dashboard
@@ -67,7 +89,7 @@
         </div>
       @endif
 
-      <div class="mb-6">
+      <div class="mb-2 ">
         <form method="POST" action="{{ route('logout') }}">
           @csrf
           <button type="submit" class="w-full py-2 px-4 bg-red-500 hover:bg-red-700 text-white font-semibold rounded-md">

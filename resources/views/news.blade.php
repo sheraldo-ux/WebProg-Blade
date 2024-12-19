@@ -34,6 +34,9 @@
                 <div class="mb-4">
                     <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
                     <input type="text" name="title" id="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                    @error('title')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
                 
                 <div class="mb-4">
@@ -43,6 +46,9 @@
                         <div id="editor" contenteditable="true" 
                             class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[150px] p-2 overflow-y-auto"
                             required></div>
+                        @error('content')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                         
                         <!-- Formatting Menu -->
                         <div class="flex space-x-2 bg-gray-100 p-2 rounded">
@@ -98,7 +104,7 @@
                 <div class="prose max-w-none overflow-hidden overflow-wrap break-word word-break break-words" id="content-{{ $item->id }}">
                     {!! $item->content !!}
                 </div>
-                @if (auth()->id() === $item->user_id)
+                @if (auth()->id() === $item->user_id || auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                     <div class="flex space-x-4 mt-4">
                         <button type="button" 
                             onclick="openEditModal('{{ $item->id }}', '{{ $item->title }}', `{!! $item->content !!}`)" 
@@ -115,6 +121,29 @@
             </article>
         @endforeach
     </div>
+
+    <!-- Pagination -->
+    <div class="mt-4 flex justify-between items-center">
+        @if ($news instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            <div>
+                Showing {{ $news->firstItem() }} to {{ $news->lastItem() }} of {{ $news->total() }} results
+            </div>
+            <div>
+                {{ $news->appends(['perPage' => request('perPage'), 'sortBy' => request('sortBy'), 'sortOrder' => request('sortOrder')])->links('pagination::simple-tailwind') }}
+            </div>
+            <div>
+                <form method="GET" action="{{ route('news.index') }}">
+                    <label for="page" class="mr-2">Go to page:</label>
+                    <input type="number" name="page" id="page" min="1" max="{{ $news->lastPage() }}"
+                        value="{{ $news->currentPage() }}" class="border rounded px-2 py-1">
+                    <input type="hidden" name="perPage" value="{{ request('perPage') }}">
+                    <input type="hidden" name="sortBy" value="{{ request('sortBy') }}">
+                    <input type="hidden" name="sortOrder" value="{{ request('sortOrder') }}">
+                    <button type="submit" class="ml-2 bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700">Go</button>
+                </form>
+            </div>
+        @endif
+    </div>
 </div>
 
 <!-- Edit Modal -->
@@ -129,7 +158,6 @@
                     </svg>
                 </button>
             </div>
-            <!-- Rest of your edit form remains the same -->
             <form id="editForm" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
@@ -293,9 +321,12 @@
 
     document.addEventListener('DOMContentLoaded', function() {
 
-        document.querySelectorAll('[id^="content-"]').forEach(element => {
-            element.innerHTML = element.textContent.trim();
-        });
+        // Remove or comment out this block to prevent stripping HTML formatting
+        
+        // document.querySelectorAll('[id^="content-"]').forEach(element => {
+        //     element.innerHTML = element.textContent.trim();
+        // });
+        
 
         const form = editor.closest('form');
         form.addEventListener('submit', function(e) {

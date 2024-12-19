@@ -87,6 +87,15 @@ Teknologi utama yang digunakan dalam pengembangan proyek:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+## ERD
+
+<div align="center">
+<a href="https://github.com/sheraldo-ux/WebProg-Blade">
+    <img src="public/ERD.JPG" alt="ERD" width="500" height="300"
+</a>
+</div>
+
 <!-- GETTING STARTED -->
 ## Getting Started
 

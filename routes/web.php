@@ -32,7 +32,8 @@ Route::get('/tips', function () {
     return view('tips');
 })->name('tips');
 
-Route::get('/support', [ReportController::class, 'index'])->name('support');
+Route::get('/support', [ReportController::class, 'index'])->name(name: 'support')->middleware('auth');
+// Route::resource('support', ReportController::class)->middleware('auth');
 
 Route::get('/flood-locations', [FloodLocationController::class, 'index'])->name('flood_locations');
 

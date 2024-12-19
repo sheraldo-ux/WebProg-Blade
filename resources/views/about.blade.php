@@ -27,7 +27,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <x-about-page :team="[
                 [
-                    'name' => 'Kevin Purnomo',
+                    'name' => 'Kevin P',
                     'role' => 'Full Stack Developer',
                     'image' => asset('team/kevin.jpg'),
                     'facebook' => '#',
@@ -35,7 +35,7 @@
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'Pierre Adrian',
+                    'name' => 'Pierre A',
                     'role' => 'UX Designer',
                     'image' => asset('team/pier.jpg'),
                     'facebook' => '#',
@@ -43,7 +43,7 @@
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'Timothy Paendong',
+                    'name' => 'Timothy P',
                     'role' => 'Backend Developer',
                     'image' => asset('team/timot.jpg'),
                     'facebook' => '#',
@@ -51,7 +51,7 @@
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'Sheraldo Halim',
+                    'name' => 'Sheraldo H',
                     'role' => 'Frontend Developer',
                     'image' => asset('team/dodo.jpg'),
                     'facebook' => '#',
@@ -59,7 +59,7 @@
                     'instagram' => '#',
                 ],
                 [
-                    'name' => 'Raphaelle Albetho Wijaya',
+                    'name' => 'Raphaelle W',
                     'role' => 'Project Manager',
                     'image' => asset('team/rafa.jpg'),
                     'facebook' => '#',

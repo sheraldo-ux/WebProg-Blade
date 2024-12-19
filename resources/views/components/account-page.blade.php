@@ -20,7 +20,7 @@
           <div class="relative w-full h-full">
             <img src="{{ Auth::user()->profile_photo ? asset('storage/profile_photos/' . Auth::user()->profile_photo) : asset('profile_photos/default-profile-picture.png') }}" 
                  alt="Profile Photo"
-                 class="w-full h-90% object-cover rounded-full transition-all duration-400 group-hover:rounded-lg">
+                 class="w-full h-90% object-cover rounded-full transition-all duration-400">
           </div>
         </div>
       </div>

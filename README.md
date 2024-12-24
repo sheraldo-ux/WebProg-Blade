@@ -247,7 +247,11 @@ Sheraldo Halim - [@sheraldo_ux](https://twitter.com/sheraldo_ux) - sheraldohalim
 
 Link Proyek: [https://github.com/sheraldo-ux/WebProg-Blade](https://github.com/sheraldo-ux/WebProg-Blade)
 
-Link Live Website: [https://floodster.my.id/](https://floodster.my.id/)
+Link Live Website: [Floodster](https://floodster.my.id/)
+
+Link Prototype: [Figma](https://www.figma.com/design/8vmJ8PbnnZmfgacrBqLm70/Website-Programming-Prototype-Group-4?node-id=0-1&t=biX3xHFjdGoBHE3s-1)
+
+Link Presentation: [Canva](https://www.canva.com/design/DAGZEhwRU7Q/YLc2MknTRvqlhgWmDLS6ZQ/edit?utm_content=DAGZEhwRU7Q&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
